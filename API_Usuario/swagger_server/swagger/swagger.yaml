@@ -1,0 +1,425 @@
+openapi: 3.0.3
+info:
+  title: Usuarios - OpenAPI 3.0
+  version: 1.1.0
+servers:
+- url: /
+tags:
+- name: Usuarios
+  description: Gestión de usuarios
+paths:
+  /usuarios:
+    post:
+      tags:
+      - Usuarios
+      summary: Crear un nuevo usuario
+      operationId: usuarios_post
+      requestBody:
+        description: Datos necesarios para crear un nuevo usuario
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/usuarios_body'
+        required: true
+      responses:
+        "201":
+          description: Usuario creado con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        "400":
+          description: Error en la solicitud (datos incorrectos o incompletos)
+      x-openapi-router-controller: swagger_server.controllers.usuarios_controller
+  /usuarios/{id}:
+    get:
+      tags:
+      - Usuarios
+      summary: Obtener un usuario por ID
+      operationId: usuarios_id_get
+      parameters:
+      - name: id
+        in: path
+        description: ID del usuario a obtener
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Datos del usuario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        "404":
+          description: Usuario no encontrado
+      x-openapi-router-controller: swagger_server.controllers.usuarios_controller
+    put:
+      tags:
+      - Usuarios
+      summary: Actualizar el nombre de usuario
+      operationId: usuarios_id_put
+      parameters:
+      - name: id
+        in: path
+        description: ID del usuario
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Nuevo nombre completo del usuario
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/usuarios_id_body'
+        required: true
+      responses:
+        "200":
+          description: Nombre actualizado con éxito
+        "404":
+          description: Usuario no encontrado
+      x-openapi-router-controller: swagger_server.controllers.usuarios_controller
+  /usuarios/{id}/correo:
+    put:
+      tags:
+      - Usuarios
+      summary: Actualizar el correo del usuario
+      operationId: usuarios_id_correo_put
+      parameters:
+      - name: id
+        in: path
+        description: ID del usuario
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Nuevo correo electrónico del usuario
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/id_correo_body'
+        required: true
+      responses:
+        "200":
+          description: Correo actualizado con éxito
+        "404":
+          description: Usuario no encontrado
+      x-openapi-router-controller: swagger_server.controllers.usuarios_controller
+  /usuarios/{id}/contraseña:
+    put:
+      tags:
+      - Usuarios
+      summary: Actualizar la contraseña del usuario
+      operationId: usuarios_id_contrasea_put
+      parameters:
+      - name: id
+        in: path
+        description: ID del usuario
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Nueva contraseña del usuario
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/id_contrasea_body'
+        required: true
+      responses:
+        "200":
+          description: Contraseña actualizada con éxito
+        "404":
+          description: Usuario no encontrado
+      x-openapi-router-controller: swagger_server.controllers.usuarios_controller
+  /usuarios/{id}/generos-favoritos:
+    put:
+      tags:
+      - Usuarios
+      summary: Actualizar los géneros favoritos de un usuario
+      operationId: usuarios_id_generos_favoritos_put
+      parameters:
+      - name: id
+        in: path
+        description: ID del usuario a actualizar
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Lista de nuevos géneros favoritos (máximo 4)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/id_generosfavoritos_body'
+        required: true
+      responses:
+        "200":
+          description: Géneros favoritos actualizados con éxito
+        "400":
+          description: Se han enviado mas de 4 generos
+        "404":
+          description: Usuario no encontrado
+      x-openapi-router-controller: swagger_server.controllers.usuarios_controller
+  /usuarios/{id}/buscar-pelicula:
+    get:
+      tags:
+      - Usuarios
+      summary: Buscar una película por nombre
+      operationId: usuarios_id_buscar_pelicula_get
+      parameters:
+      - name: id
+        in: path
+        description: ID del usuario
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: nombre
+        in: query
+        description: Nombre de la película a buscar
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Información de la película encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pelicula'
+        "404":
+          description: Película no encontrada
+      x-openapi-router-controller: swagger_server.controllers.usuarios_controller
+  /usuarios/{id}/buscar-pelicula-por-genero:
+    get:
+      tags:
+      - Usuarios
+      summary: Buscar películas por género
+      operationId: usuarios_id_buscar_pelicula_por_genero_get
+      parameters:
+      - name: id
+        in: path
+        description: ID del usuario
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: genero
+        in: query
+        description: Género de las películas a buscar
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Lista de películas que coinciden con el género
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pelicula'
+                x-content-type: application/json
+        "404":
+          description: No se encontraron películas para ese género
+      x-openapi-router-controller: swagger_server.controllers.usuarios_controller
+components:
+  schemas:
+    Usuario:
+      type: object
+      properties:
+        id:
+          type: string
+        nombre_completo:
+          type: string
+        correo:
+          type: string
+        contraseña:
+          type: string
+        imagen_perfil:
+          type: string
+          description: URL de la imagen de perfil
+        metodo_pago:
+          type: string
+          description: "Método de pago del usuario (tarjeta de crédito, PayPal...)"
+        idioma:
+          type: string
+          description: "Idioma preferido del usuario (\"español\", \"inglés\", \"\
+            portugués\"...)"
+        generos_favoritos:
+          maxItems: 4
+          type: array
+          description: Lista de géneros favoritos del usuario (máximo 4)
+          example:
+          - acción
+          - comedia
+          - drama
+          - ciencia ficción
+          items:
+            type: string
+      example:
+        nombre_completo: nombre_completo
+        imagen_perfil: imagen_perfil
+        correo: correo
+        idioma: idioma
+        id: id
+        metodo_pago: metodo_pago
+        generos_favoritos:
+        - acción
+        - comedia
+        - drama
+        - ciencia ficción
+        contraseña: contraseña
+    Pelicula:
+      type: object
+      properties:
+        id:
+          type: string
+        titulo:
+          type: string
+        genero:
+          type: string
+        descripcion:
+          type: string
+        director:
+          $ref: '#/components/schemas/Director'
+        actores:
+          type: array
+          items:
+            $ref: '#/components/schemas/Actor'
+        duracion:
+          type: string
+          format: time
+      example:
+        descripcion: descripcion
+        actores:
+        - fecha_nacimiento: 2000-01-23T04:56:07.000+00:00
+          id: id
+          nombre: nombre
+        - fecha_nacimiento: 2000-01-23T04:56:07.000+00:00
+          id: id
+          nombre: nombre
+        director:
+          fecha_nacimiento: 2000-01-23T04:56:07.000+00:00
+          id: id
+          nombre: nombre
+        genero: genero
+        titulo: titulo
+        duracion: duracion
+        id: id
+    Actor:
+      type: object
+      properties:
+        id:
+          type: string
+        nombre:
+          type: string
+        fecha_nacimiento:
+          type: string
+          format: date-time
+      example:
+        fecha_nacimiento: 2000-01-23T04:56:07.000+00:00
+        id: id
+        nombre: nombre
+    Director:
+      type: object
+      properties:
+        id:
+          type: string
+        nombre:
+          type: string
+        fecha_nacimiento:
+          type: string
+          format: date-time
+      example:
+        fecha_nacimiento: 2000-01-23T04:56:07.000+00:00
+        id: id
+        nombre: nombre
+    usuarios_body:
+      required:
+      - contraseña
+      - correo
+      - nombre_completo
+      type: object
+      properties:
+        nombre_completo:
+          type: string
+          description: Nombre completo del usuario
+        correo:
+          type: string
+          description: Correo electrónico del usuario
+        contraseña:
+          type: string
+          description: Contraseña del usuario
+        imagen_perfil:
+          type: string
+          description: URL de la imagen de perfil del usuario
+        metodo_pago:
+          type: string
+          description: Método de pago preferido del usuario
+        idioma:
+          type: string
+          description: "Idioma preferido (\"español\", \"inglés\", \"portugués\"...)"
+        generos_favoritos:
+          maxItems: 4
+          type: array
+          description: Lista de géneros favoritos del usuario (máximo 4)
+          items:
+            type: string
+      example:
+        nombre_completo: Fernando García
+        correo: fer.garcia@example.com
+        contraseña: contraseña123
+        imagen_perfil: https://example.com/perfil.jpg
+        metodo_pago: tarjeta de crédito
+        idioma: español
+        generos_favoritos:
+        - acción
+        - drama
+    usuarios_id_body:
+      type: object
+      properties:
+        nombre_completo:
+          type: string
+          description: Nuevo nombre completo del usuario
+    id_correo_body:
+      type: object
+      properties:
+        correo:
+          type: string
+          description: Nuevo correo electrónico
+    id_contrasea_body:
+      type: object
+      properties:
+        contraseña:
+          type: string
+          description: Nueva contraseña
+    id_generosfavoritos_body:
+      type: object
+      properties:
+        generos_favoritos:
+          maxItems: 4
+          type: array
+          items:
+            type: string
+      example:
+        generos_favoritos:
+        - romance
+        - drama
+        - terror
+
