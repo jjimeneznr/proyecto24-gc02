@@ -4,41 +4,18 @@ import six
 from swagger_server.models.id_contrasea_body import IdContraseaBody  # noqa: E501
 from swagger_server.models.id_correo_body import IdCorreoBody  # noqa: E501
 from swagger_server.models.id_generosfavoritos_body import IdGenerosfavoritosBody  # noqa: E501
-from swagger_server.models.pelicula import Pelicula  # noqa: E501
 from swagger_server.models.usuario import Usuario  # noqa: E501
 from swagger_server.models.usuarios_body import UsuariosBody  # noqa: E501
 from swagger_server.models.usuarios_id_body import UsuariosIdBody  # noqa: E501
 from swagger_server import util
 
+from flask import request, jsonify
+from werkzeug.security import generate_password_hash
+from swagger_server.models.usuario import Usuario
 
-def usuarios_id_buscar_pelicula_get(id, nombre):  # noqa: E501
-    """Buscar una película por nombre
-
-     # noqa: E501
-
-    :param id: ID del usuario
-    :type id: str
-    :param nombre: Nombre de la película a buscar
-    :type nombre: str
-
-    :rtype: Pelicula
-    """
-    return 'do some magic!'
+from . import dbconnection
 
 
-def usuarios_id_buscar_pelicula_por_genero_get(id, genero):  # noqa: E501
-    """Buscar películas por género
-
-     # noqa: E501
-
-    :param id: ID del usuario
-    :type id: str
-    :param genero: Género de las películas a buscar
-    :type genero: str
-
-    :rtype: List[Pelicula]
-    """
-    return 'do some magic!'
 
 
 def usuarios_id_contrasea_put(body, id):  # noqa: E501
@@ -132,6 +109,20 @@ def usuarios_post(body):  # noqa: E501
 
     :rtype: Usuario
     """
-    if connexion.request.is_json:
-        body = UsuariosBody.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+    data = request.get_json()
+    firstname = data.get("firstname")
+    secondname = data.get("secondname")
+    correo = data.get("correo")
+    password1 = data.get("password1")
+    password2 = data.get("password2")
+
+    # Validar los datos
+    if not firstname or not secondname or not correo or not password1 or not password2:
+        return jsonify({"error": "Faltan datos"}), 400
+
+    # Crear el nuevo usuario
+    nuevo_usuario = dbconnection.dbSignUp( correo=correo,firstname=firstname,secondname=secondname, password=password1,password=password2)
+    
+
+
+

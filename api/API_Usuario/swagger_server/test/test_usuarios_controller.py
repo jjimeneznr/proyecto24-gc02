@@ -8,7 +8,6 @@ from six import BytesIO
 from swagger_server.models.id_contrasea_body import IdContraseaBody  # noqa: E501
 from swagger_server.models.id_correo_body import IdCorreoBody  # noqa: E501
 from swagger_server.models.id_generosfavoritos_body import IdGenerosfavoritosBody  # noqa: E501
-from swagger_server.models.pelicula import Pelicula  # noqa: E501
 from swagger_server.models.usuario import Usuario  # noqa: E501
 from swagger_server.models.usuarios_body import UsuariosBody  # noqa: E501
 from swagger_server.models.usuarios_id_body import UsuariosIdBody  # noqa: E501
@@ -17,32 +16,6 @@ from swagger_server.test import BaseTestCase
 
 class TestUsuariosController(BaseTestCase):
     """UsuariosController integration test stubs"""
-
-    def test_usuarios_id_buscar_pelicula_get(self):
-        """Test case for usuarios_id_buscar_pelicula_get
-
-        Buscar una película por nombre
-        """
-        query_string = [('nombre', 'nombre_example')]
-        response = self.client.open(
-            '/usuarios/{id}/buscar-pelicula'.format(id='id_example'),
-            method='GET',
-            query_string=query_string)
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
-
-    def test_usuarios_id_buscar_pelicula_por_genero_get(self):
-        """Test case for usuarios_id_buscar_pelicula_por_genero_get
-
-        Buscar películas por género
-        """
-        query_string = [('genero', 'genero_example')]
-        response = self.client.open(
-            '/usuarios/{id}/buscar-pelicula-por-genero'.format(id='id_example'),
-            method='GET',
-            query_string=query_string)
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
 
     def test_usuarios_id_contrasea_put(self):
         """Test case for usuarios_id_contrasea_put
