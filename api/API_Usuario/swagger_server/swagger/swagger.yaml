@@ -81,6 +81,30 @@ paths:
         "200":
           description: Nombre actualizado con éxito
         "404":
+          description: Usuario no encontrado    
+    delete:
+      tags:
+      - Usuarios
+      summary: Eliminar un usuario
+      description: Elimina un usuario existente identificado por su ID.
+      operationId: usuarios_id_delete
+      parameters:
+      - name: id
+        in: path
+        description: ID del usuario a eliminar
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Usuario eliminado con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "404":
           description: Usuario no encontrado
       x-openapi-router-controller: swagger_server.controllers.usuarios_controller
   /usuarios/{id}/correo:

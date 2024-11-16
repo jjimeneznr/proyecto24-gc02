@@ -116,7 +116,7 @@ def dbGetActor(actor_id):
         print("Total actores:", cursor.rowcount)
         cursor.close()
     except db.DatabaseError as error:
-        print("Error: No se pueden obtener el actor")
+        print("Error: No se puede obtener el actor")
         print(error)
 
 def dbGetDirectors():
@@ -132,6 +132,20 @@ def dbGetDirectors():
         cursor.close()
     except db.DatabaseError as error:
         print("Error: No se pueden obtener los directores")
+        print(error)
+
+def dbGetDirectorById(id):
+    print("---dbGetDirectorById---")
+
+    try:
+        cursor = conexion.cursor()
+        consulta = "SELECT * FROM asee_directors WHERE director = :id"
+        cursor.execute(consulta, [id])
+        tupla = cursor.fetchone()
+        print(tupla)
+        cursor.close()
+    except db.DatabaseError as error:
+        print("Error: No se puede obtener el director")
         print(error)
 
 def dbGetEpisodes():
@@ -158,6 +172,49 @@ def dbGetMovies():
         print("Error: No se pueden obtener las películas")
         print(error)
 
+def dbGetMovieById(movie_id):
+    print("---dbGetMovieById---")
+
+    try:
+        cursor = conexion.cursor()
+        consulta = "SELECT * FROM asee_movies WHERE movie = :movie_id"
+        cursor.execute(consulta, [movie_id])
+        tupla = cursor.fetchone()
+        print(tupla)
+        cursor.close()
+    except db.DatabaseError as error:
+        print("Error: No se puede obtener la película")
+        print(error)
+
+def dbGetMovieByTitle(titulo):
+    print("---dbGetMovieByTitle---")
+
+    try:
+        cursor = conexion.cursor()
+        consulta = "SELECT * FROM asee_movies WHERE title LIKE %:titulo%"
+        cursor.execute(consulta, [titulo])
+        tupla = cursor.fetchone()
+        print(tupla)
+        cursor.close()
+    except db.DatabaseError as error:
+        print("Error: No se puede obtener la película")
+        print(error)
+
+def dbGetMoviesByGenre(genero):
+    print("---dbGetMoviesByGenre---")
+
+    try:
+        cursor = conexion.cursor()
+        consulta = "SELECT * FROM asee_movies WHERE genre = :genero"
+        cursor.execute(consulta, [genero])
+        for tupla in cursor:
+            print(tupla)
+        print("Total películas del genero ", genero, ": " , cursor.rowcount)
+        cursor.close()
+    except db.DatabaseError as error:
+        print("Error: No se pueden obtener las películas")
+        print(error)
+
 def dbGetActorsInMovie(movie_id):
     print("---dbGetActorsInMovie---")
     try:
@@ -169,7 +226,21 @@ def dbGetActorsInMovie(movie_id):
         print("Total actores:", cursor.rowcount)
         cursor.close()
     except db.DatabaseError as error:
-        print("Error: No se pueden obtener las películas")
+        print("Error: No se pueden obtener los actores de la película")
+        print(error)
+
+def dbGetDirectorsInMovie(movie_id):
+    print("---dbGetDirectorsInMovie---")
+    try:
+        cursor = conexion.cursor()
+        consulta = "SELECT nombre FROM asee_directors WHERE movie = :movie_id"
+        cursor.execute(consulta, [movie_id,])
+        for tupla in cursor:
+            print(tupla)
+        print("Total directores:", cursor.rowcount)
+        cursor.close()
+    except db.DatabaseError as error:
+        print("Error: No se pueden obtener los directores de la película")
         print(error)
 
 conexion = dbConectar()
