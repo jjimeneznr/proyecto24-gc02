@@ -110,7 +110,7 @@ def dbGetActor(actor_id):
     try:
         cursor = conexion.cursor()
         consulta = "SELECT * FROM asee_actors WHERE actor_id = :actor_id"
-        cursor.execute(consulta, [actor_id,])
+        cursor.execute(consulta, [actor_id])
         for tupla in cursor:
             print(tupla)
         print("Total actores:", cursor.rowcount)
@@ -139,7 +139,7 @@ def dbGetDirectorById(id):
 
     try:
         cursor = conexion.cursor()
-        consulta = "SELECT * FROM asee_directors WHERE director = :id"
+        consulta = "SELECT * FROM asee_directors WHERE director_id = :id"
         cursor.execute(consulta, [id])
         tupla = cursor.fetchone()
         print(tupla)
@@ -177,7 +177,7 @@ def dbGetMovieById(movie_id):
 
     try:
         cursor = conexion.cursor()
-        consulta = "SELECT * FROM asee_movies WHERE movie = :movie_id"
+        consulta = "SELECT * FROM asee_movies WHERE movie_id = :movie_id"
         cursor.execute(consulta, [movie_id])
         tupla = cursor.fetchone()
         print(tupla)
@@ -191,7 +191,7 @@ def dbGetMovieByTitle(titulo):
 
     try:
         cursor = conexion.cursor()
-        consulta = "SELECT * FROM asee_movies WHERE title LIKE %:titulo%"
+        consulta = "SELECT * FROM asee_movies WHERE movie_title LIKE '%:titulo%'"
         cursor.execute(consulta, [titulo])
         tupla = cursor.fetchone()
         print(tupla)
@@ -219,8 +219,8 @@ def dbGetActorsInMovie(movie_id):
     print("---dbGetActorsInMovie---")
     try:
         cursor = conexion.cursor()
-        consulta = "SELECT actor, actor_role FROM asee_actor_movie WHERE movie = :movie_id"
-        cursor.execute(consulta, [movie_id,])
+        consulta = "SELECT actor, actor_role FROM asee_actor_movie WHERE movie_id = :movie_id"
+        cursor.execute(consulta, [movie_id])
         for tupla in cursor:
             print(tupla)
         print("Total actores:", cursor.rowcount)
@@ -233,8 +233,8 @@ def dbGetDirectorsInMovie(movie_id):
     print("---dbGetDirectorsInMovie---")
     try:
         cursor = conexion.cursor()
-        consulta = "SELECT nombre FROM asee_directors WHERE movie = :movie_id"
-        cursor.execute(consulta, [movie_id,])
+        consulta = "SELECT nombre FROM asee_directors WHERE movie_id = :movie_id"
+        cursor.execute(consulta, [movie_id])
         for tupla in cursor:
             print(tupla)
         print("Total directores:", cursor.rowcount)
@@ -242,5 +242,95 @@ def dbGetDirectorsInMovie(movie_id):
     except db.DatabaseError as error:
         print("Error: No se pueden obtener los directores de la película")
         print(error)
+
+def dbModifyUserName(id, nombre):
+    print("---dbModifyUserName---")
+    try:
+        cursor = conexion.cursor()
+        consulta = "UPDATE nombre = :nombre FROM asee_users WHERE user_id = :id"
+        cursor.execute(consulta, [nombre, id])
+        
+        if cursor.rowcount == 1:
+            print("Nombre del usuario ", id, " modificado. Nuevo nombre: ", nombre)
+        else:
+            print("No se ha podido modificar el nombre del usuario")
+        
+        cursor.close()
+    except db.DatabaseError as error:
+        print("Error: No se ha podido cambiar el nombre del usuario")
+        print(error)
+
+def dbModifyFavGenre(id, genero):
+    print("---dbModifyFavGenre---")
+    try:
+        cursor = conexion.cursor()
+        consulta = "UPDATE fav_genre = :genero FROM asee_users WHERE user_id = :id"
+        cursor.execute(consulta, [genero, id])
+        
+        if cursor.rowcount == 1:
+            print("Genero favorito del usuario ", id, " modificado. Nuevo genero favorito: ", genero)
+        else:
+            print("No se ha podido modificar el genero favorito del usuario")
+        
+        cursor.close()
+    except db.DatabaseError as error:
+        print("Error: No se ha podido cambiar el genero favorito del usuario")
+        print(error)
+
+def dbModifylEmail(id, email):
+    print("---dbModifylEmail---")
+    try:
+        cursor = conexion.cursor()
+        consulta = "UPDATE email = :email FROM asee_users WHERE user_id = :id"
+        cursor.execute(consulta, [email, id])
+        
+        if cursor.rowcount == 1:
+            print("Email del usuario ", id, " modificado. Nuevo email: ", email)
+        else:
+            print("No se ha podido modificar el email favorito del usuario")
+        
+        cursor.close()
+    except db.DatabaseError as error:
+        print("Error: No se ha podido cambiar el email del usuario")
+        print(error)
+
+def dbModifyPassword(id, password):
+    print("---dbModifyPassword---")
+    try:
+        cursor = conexion.cursor()
+        consulta = "UPDATE passwd = :password FROM asee_users WHERE user_id = :id"
+        cursor.execute(consulta, [password, id])
+        
+        if cursor.rowcount == 1:
+            print("Contraseña del usuario ", id, " modificada. Nueva contraseña: ", password)
+        else:
+            print("No se ha podido modificar la contarseña del usuario")
+        
+        cursor.close()
+    except db.DatabaseError as error:
+        print("Error: No se ha podido cambiar la contraseña del usuario")
+        print(error)
+
+def dbRemoveUser(email=str, password=str):
+    print("---dbRemoveUser---")
+
+    try:
+        cursor = conexion.cursor()
+        consulta = "DELETE FROM asee_users WHERE email = :email AND passwd = :password"
+        cursor.execute(consulta, [email, password])
+        resul = cursor.fetchone()
+        if(cursor.rowcount == 1):
+            print("Usuario eliminado correctamente")
+        else:
+            print("Usuario no existente en la base de datos:",cursor.rowcount)
+            return False
+        print('------------------------------')
+        cursor.close()
+        conexion.commit()
+        return True
+    except db.DatabaseError as error:
+        print("Error. No se ha podido eliminar el usuario")
+        print(error)
+        return False
 
 conexion = dbConectar()
