@@ -5,8 +5,8 @@ from datetime import date, datetime  # noqa: F401
 
 from typing import List, Dict  # noqa: F401
 
-from swagger_server.models.base_model_ import Model
-from swagger_server import util
+from ..models.base_model_ import Model
+from .. import util
 
 
 class Usuario(Model):
@@ -14,7 +14,7 @@ class Usuario(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id: str=None, nombre_completo: str=None, correo: str=None, contrasea: str=None, imagen_perfil: str=None, metodo_pago: str=None, idioma: str=None, generos_favoritos: List[str]=None):  # noqa: E501
+    def __init__(self, id: str=None, nombre_completo: str=None, correo: str=None, contrasea: str=None, imagen_perfil: str=None, metodo_pago: str=None, idioma: str=None, genero_favorito: str=None):  # noqa: E501
         """Usuario - a model defined in Swagger
 
         :param id: The id of this Usuario.  # noqa: E501
@@ -31,8 +31,8 @@ class Usuario(Model):
         :type metodo_pago: str
         :param idioma: The idioma of this Usuario.  # noqa: E501
         :type idioma: str
-        :param generos_favoritos: The generos_favoritos of this Usuario.  # noqa: E501
-        :type generos_favoritos: List[str]
+        :param genero_favorito: The genero_favorito of this Usuario.  # noqa: E501
+        :type genero_favorito: str
         """
         self.swagger_types = {
             'id': str,
@@ -42,7 +42,7 @@ class Usuario(Model):
             'imagen_perfil': str,
             'metodo_pago': str,
             'idioma': str,
-            'generos_favoritos': List[str]
+            'genero_favorito': str
         }
 
         self.attribute_map = {
@@ -53,7 +53,7 @@ class Usuario(Model):
             'imagen_perfil': 'imagen_perfil',
             'metodo_pago': 'metodo_pago',
             'idioma': 'idioma',
-            'generos_favoritos': 'generos_favoritos'
+            'genero_favorito': 'genero_favorito'
         }
         self._id = id
         self._nombre_completo = nombre_completo
@@ -62,7 +62,7 @@ class Usuario(Model):
         self._imagen_perfil = imagen_perfil
         self._metodo_pago = metodo_pago
         self._idioma = idioma
-        self._generos_favoritos = generos_favoritos
+        self._genero_favorito = genero_favorito
 
     @classmethod
     def from_dict(cls, dikt) -> 'Usuario':
@@ -229,24 +229,24 @@ class Usuario(Model):
         self._idioma = idioma
 
     @property
-    def generos_favoritos(self) -> List[str]:
-        """Gets the generos_favoritos of this Usuario.
+    def genero_favorito(self) -> str:
+        """Gets the genero_favorito of this Usuario.
 
-        Lista de géneros favoritos del usuario (máximo 4)  # noqa: E501
+        Género favorito del usuario  # noqa: E501
 
-        :return: The generos_favoritos of this Usuario.
-        :rtype: List[str]
+        :return: The genero_favorito of this Usuario.
+        :rtype: str
         """
-        return self._generos_favoritos
+        return self._genero_favorito
 
-    @generos_favoritos.setter
-    def generos_favoritos(self, generos_favoritos: List[str]):
-        """Sets the generos_favoritos of this Usuario.
+    @genero_favorito.setter
+    def genero_favorito(self, genero_favorito: str):
+        """Sets the genero_favorito of this Usuario.
 
-        Lista de géneros favoritos del usuario (máximo 4)  # noqa: E501
+        Género favorito del usuario  # noqa: E501
 
-        :param generos_favoritos: The generos_favoritos of this Usuario.
-        :type generos_favoritos: List[str]
+        :param genero_favorito: The genero_favorito of this Usuario.
+        :type genero_favorito: str
         """
 
-        self._generos_favoritos = generos_favoritos
+        self._genero_favorito = genero_favorito

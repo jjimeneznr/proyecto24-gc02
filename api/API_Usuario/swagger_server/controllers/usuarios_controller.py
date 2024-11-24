@@ -1,21 +1,20 @@
 import connexion
 import six
 
-from swagger_server.models.id_contrasea_body import IdContraseaBody  # noqa: E501
-from swagger_server.models.id_correo_body import IdCorreoBody  # noqa: E501
-from swagger_server.models.id_generosfavoritos_body import IdGenerosfavoritosBody  # noqa: E501
-from swagger_server.models.usuario import Usuario  # noqa: E501
-from swagger_server.models.usuarios_body import UsuariosBody  # noqa: E501
-from swagger_server.models.usuarios_id_body import UsuariosIdBody  # noqa: E501
-from swagger_server import util
+
+from ..models.id_contrasea_body import IdContraseaBody  # noqa: E501
+from ..models.id_correo_body import IdCorreoBody  # noqa: E501
+from ..models.id_generofavorito_body import IdGenerofavoritoBody  # noqa: E501
+from ..models.inline_response200 import InlineResponse200  # noqa: E501
+from ..models.usuario import Usuario  # noqa: E501
+from ..models.usuarios_body import UsuariosBody  # noqa: E501
+from ..models.usuarios_id_body import UsuariosIdBody  # noqa: E501
+from .. import util
 
 from flask import request, jsonify
-from werkzeug.security import generate_password_hash
-from swagger_server.models.usuario import Usuario
-
-from . import dbconnection
-
-
+from ..... import dbconnection 
+import oracledb
+from flask import jsonify, request
 
 
 def usuarios_id_contrasea_put(body, id):  # noqa: E501
@@ -30,9 +29,7 @@ def usuarios_id_contrasea_put(body, id):  # noqa: E501
 
     :rtype: None
     """
-    if connexion.request.is_json:
-        body = IdContraseaBody.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+   
 
 
 def usuarios_id_correo_put(body, id):  # noqa: E501
@@ -47,26 +44,34 @@ def usuarios_id_correo_put(body, id):  # noqa: E501
 
     :rtype: None
     """
-    if connexion.request.is_json:
-        body = IdCorreoBody.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+    
 
+def usuarios_id_delete(id, contrasea):  # noqa: E501
+    """Eliminar un usuario
 
-def usuarios_id_generos_favoritos_put(body, id):  # noqa: E501
-    """Actualizar los géneros favoritos de un usuario
+    Elimina un usuario existente identificado por su ID y su contraseña. # noqa: E501
+
+    :param id: ID del usuario a eliminar
+    :type id: str
+    :param contrasea: Contraseña del usuario para confirmar la eliminación
+    :type contrasea: str
+
+    :rtype: InlineResponse200
+    """
+
+def usuarios_id_genero_favorito_put(body, id):  # noqa: E501
+    """Actualizar el género favorito de un usuario
 
      # noqa: E501
 
-    :param body: Lista de nuevos géneros favoritos (máximo 4)
+    :param body: Nuevo género favorito
     :type body: dict | bytes
     :param id: ID del usuario a actualizar
     :type id: str
 
     :rtype: None
     """
-    if connexion.request.is_json:
-        body = IdGenerosfavoritosBody.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+   
 
 
 def usuarios_id_get(id):  # noqa: E501
@@ -79,7 +84,7 @@ def usuarios_id_get(id):  # noqa: E501
 
     :rtype: Usuario
     """
-    return 'do some magic!'
+
 
 
 def usuarios_id_put(body, id):  # noqa: E501
@@ -94,9 +99,8 @@ def usuarios_id_put(body, id):  # noqa: E501
 
     :rtype: None
     """
-    if connexion.request.is_json:
-        body = UsuariosIdBody.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+   
+    
 
 
 def usuarios_post(body):  # noqa: E501
@@ -109,20 +113,17 @@ def usuarios_post(body):  # noqa: E501
 
     :rtype: Usuario
     """
-    data = request.get_json()
-    firstname = data.get("firstname")
-    secondname = data.get("secondname")
-    correo = data.get("correo")
-    password1 = data.get("password1")
-    password2 = data.get("password2")
+    
+    firstname = body.get("firstname")
+    secondname = body.get("secondname")
+    correo = body.get("correo")
+    password1 = body.get("password1")
+    password2 = body.get("password2")
 
     # Validar los datos
-    if not firstname or not secondname or not correo or not password1 or not password2:
+    if not all([firstname ,secondname , correo , password1 ,password2]):
         return jsonify({"error": "Faltan datos"}), 400
 
     # Crear el nuevo usuario
-    nuevo_usuario = dbconnection.dbSignUp( correo=correo,firstname=firstname,secondname=secondname, password=password1,password=password2)
-    
-
-
-
+    nuevo_usuario = dbconnection.dbSignUp(correo=correo,firstname=firstname,secondname=secondname, password1=password1,password2=password2)
+    return {"mensaje": "Usuario creado correctamente", "usuario": correo}, 201

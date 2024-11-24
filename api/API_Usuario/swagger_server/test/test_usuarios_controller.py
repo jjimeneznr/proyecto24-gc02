@@ -5,13 +5,14 @@ from __future__ import absolute_import
 from flask import json
 from six import BytesIO
 
-from swagger_server.models.id_contrasea_body import IdContraseaBody  # noqa: E501
-from swagger_server.models.id_correo_body import IdCorreoBody  # noqa: E501
-from swagger_server.models.id_generosfavoritos_body import IdGenerosfavoritosBody  # noqa: E501
-from swagger_server.models.usuario import Usuario  # noqa: E501
-from swagger_server.models.usuarios_body import UsuariosBody  # noqa: E501
-from swagger_server.models.usuarios_id_body import UsuariosIdBody  # noqa: E501
-from swagger_server.test import BaseTestCase
+from ..models.id_contrasea_body import IdContraseaBody  # noqa: E501
+from ..models.id_correo_body import IdCorreoBody  # noqa: E501
+from ..models.id_generofavorito_body import IdGenerofavoritoBody  # noqa: E501
+from ..models.inline_response200 import InlineResponse200  # noqa: E501
+from ..models.usuario import Usuario  # noqa: E501
+from ..models.usuarios_body import UsuariosBody  # noqa: E501
+from ..models.usuarios_id_body import UsuariosIdBody  # noqa: E501
+from ..test import BaseTestCase
 
 
 class TestUsuariosController(BaseTestCase):
@@ -45,14 +46,27 @@ class TestUsuariosController(BaseTestCase):
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
-    def test_usuarios_id_generos_favoritos_put(self):
-        """Test case for usuarios_id_generos_favoritos_put
+    def test_usuarios_id_delete(self):
+        """Test case for usuarios_id_delete
 
-        Actualizar los géneros favoritos de un usuario
+        Eliminar un usuario
         """
-        body = IdGenerosfavoritosBody()
+        query_string = [('contrasea', 'contrasea_example')]
         response = self.client.open(
-            '/usuarios/{id}/generos-favoritos'.format(id='id_example'),
+            '/usuarios/{id}'.format(id='id_example'),
+            method='DELETE',
+            query_string=query_string)
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+    def test_usuarios_id_genero_favorito_put(self):
+        """Test case for usuarios_id_genero_favorito_put
+
+        Actualizar el género favorito de un usuario
+        """
+        body = IdGenerofavoritoBody()
+        response = self.client.open(
+            '/usuarios/{id}/genero-favorito'.format(id='id_example'),
             method='PUT',
             data=json.dumps(body),
             content_type='application/json')
