@@ -1,11 +1,13 @@
 import connexion
 import six
 
-from swagger_server.models.actor import Actor  # noqa: E501
-from swagger_server.models.director import Director  # noqa: E501
-from swagger_server.models.serie import Serie  # noqa: E501
-from swagger_server import util
+from ..models.actor import Actor  # noqa: E501
+from ..models.director import Director  # noqa: E501
+from ..models.serie import Serie  # noqa: E501
+from .. import util
 
+from flask import request, jsonify
+from .... import dbconnection
 
 def series_genero_genero_get(genero):  # noqa: E501
     """Obtener una serie por genero
@@ -17,7 +19,7 @@ def series_genero_genero_get(genero):  # noqa: E501
 
     :rtype: List[Serie]
     """
-    return 'do some magic!'
+    return dbconnection.dbGetSeriesByGenre()
 
 
 def series_get():  # noqa: E501
@@ -28,7 +30,7 @@ def series_get():  # noqa: E501
 
     :rtype: List[Serie]
     """
-    return 'do some magic!'
+    return dbconnection.dbGetSeries()
 
 
 def series_id_actores_get(id):  # noqa: E501
@@ -41,7 +43,7 @@ def series_id_actores_get(id):  # noqa: E501
 
     :rtype: List[Actor]
     """
-    return 'do some magic!'
+    return dbconnection.dbGetActorsInSerie(id)
 
 
 def series_id_directores_get(id):  # noqa: E501
@@ -54,7 +56,7 @@ def series_id_directores_get(id):  # noqa: E501
 
     :rtype: List[Director]
     """
-    return 'do some magic!'
+    return 'No hay directores para las series'
 
 
 def series_id_get(id):  # noqa: E501
@@ -67,7 +69,7 @@ def series_id_get(id):  # noqa: E501
 
     :rtype: Serie
     """
-    return 'do some magic!'
+    return dbconnection.dbGetSerieById(id)
 
 
 def series_titulo_titulo_get(titulo):  # noqa: E501
@@ -80,4 +82,4 @@ def series_titulo_titulo_get(titulo):  # noqa: E501
 
     :rtype: List[Serie]
     """
-    return 'do some magic!'
+    return dbconnection.dbGetSeriesByTitle(titulo)
