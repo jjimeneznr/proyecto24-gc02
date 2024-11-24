@@ -1,3 +1,4 @@
+
 import connexion
 import six
 
@@ -30,6 +31,18 @@ def usuarios_id_contrasea_put(body, id):  # noqa: E501
     :rtype: None
     """
    
+    new_passwd = body.get('contrasea')
+
+    if new_passwd:
+        try:
+            if dbconnection.dbModifyPassword(id, new_passwd):
+                return {"mensaje": "Contraseña actualizada correctamente"}, 200
+            else:
+                return {"error": "No se pudo actualizar la contraseña"}, 400
+        except Exception as e:
+            return {"error": f"Error al actualizar contraseña: {str(e)}"}, 500
+    else:
+        return {"error": "Solicitud inválida"}, 400
 
 
 def usuarios_id_correo_put(body, id):  # noqa: E501
@@ -45,6 +58,19 @@ def usuarios_id_correo_put(body, id):  # noqa: E501
     :rtype: None
     """
     
+    new_email = body.get('correo')
+
+    if new_email:
+        try:
+            if dbconnection.dbModifylEmail(id, new_email):
+                return {"mensaje": "Correo actualizado correctamente"}, 200
+            else:
+                return {"error": "No se pudo actualizar el correo"}, 400
+        except Exception as e:
+            return {"error": f"Error al actualizar correo: {str(e)}"}, 500
+    else:
+        return {"error": "Solicitud inválida"}, 400
+
 
 def usuarios_id_delete(id, contrasea):  # noqa: E501
     """Eliminar un usuario
@@ -58,6 +84,8 @@ def usuarios_id_delete(id, contrasea):  # noqa: E501
 
     :rtype: InlineResponse200
     """
+   
+
 
 def usuarios_id_genero_favorito_put(body, id):  # noqa: E501
     """Actualizar el género favorito de un usuario
@@ -71,7 +99,18 @@ def usuarios_id_genero_favorito_put(body, id):  # noqa: E501
 
     :rtype: None
     """
-   
+    new_genero = body.get('genero_favorito')
+
+    if new_genero:
+        try:
+            if dbconnection.dbModifyFavGenre(id,new_genero):
+                return {"mensaje": "Contraseña actualizada correctamente"}, 200
+            else:
+                return {"error": "No se pudo actualizar la contraseña"}, 400
+        except Exception as e:
+            return {"error": f"Error al actualizar contraseña: {str(e)}"}, 500
+    else:
+        return {"error": "Solicitud inválida"}, 400
 
 
 def usuarios_id_get(id):  # noqa: E501
@@ -85,6 +124,11 @@ def usuarios_id_get(id):  # noqa: E501
     :rtype: Usuario
     """
 
+    usuario = dbconnection.dbGetUser(id) # Supongo que esta función existe en `dbconnection`.
+    if usuario:
+        return jsonify(usuario), 200
+    return {"error": "Usuario no encontrado"}, 404
+   
 
 
 def usuarios_id_put(body, id):  # noqa: E501
@@ -100,7 +144,18 @@ def usuarios_id_put(body, id):  # noqa: E501
     :rtype: None
     """
    
-    
+    nombre = body.get('nombre_completo')
+
+    if nombre:
+        try:
+            if dbconnection.dbModifyUserName(id, nombre):
+                    return {"mensaje": "Usuario actualizado correctamente"}, 200
+            else:
+                return {"error": "No se pudo actualizar el usuario"}, 400
+        except Exception as e:
+            return {"error": f"Error al actualizar usuario: {str(e)}"}, 500
+    else:
+        return {"error": "Solicitud inválida"}, 400
 
 
 def usuarios_post(body):  # noqa: E501
@@ -127,3 +182,4 @@ def usuarios_post(body):  # noqa: E501
     # Crear el nuevo usuario
     nuevo_usuario = dbconnection.dbSignUp(correo=correo,firstname=firstname,secondname=secondname, password1=password1,password2=password2)
     return {"mensaje": "Usuario creado correctamente", "usuario": correo}, 201
+
