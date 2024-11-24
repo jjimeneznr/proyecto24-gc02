@@ -8,18 +8,44 @@ from api.API_Contenidos.swagger_server import contenidos_blueprint
 from api.API_Usuario.swagger_server.controllers import usuarios_controller
 from api.API_Visualizaciones.swagger_server import visualizaciones_blueprint
 
-app = Flask(__name__)
+import dbconnection  # Importar función para validar en la base de datos
 
+app = Flask(__name__)
 
 # Registrar cada API con un prefijo de URL
 app.register_blueprint(contenidos_blueprint, url_prefix='/api/contenidos')
 app.register_blueprint(visualizaciones_blueprint, url_prefix='/api/visualizaciones')
-
-@app.route('/') #Al hacer python app.py hay que poner en la ruta /Inicio
+ 
+@app.route('/')
 def index():
     return render_template('login.html')
 
+@app.route('/', methods=['GET', 'POST'])
+def login():
+    # Obtener datos del formulario
+    email = request.form.get('email')
+    password = request.form.get('password')
 
+    # Validar las credenciales usando la base de datos
+    id_usuario = dbconnection.dbLogIn(email, password)  # Función personalizada que valida en la BD
+    usuario=  usuarios_controller.usuarios_id_get(id_usuario['id'])
+    if usuario:  # Si las credenciales son válidas
+        session['id'] = usuario['id']
+        session['nombre_completo'] = usuario['nombre_completo']
+        session['email'] = usuario['email']
+        session['password'] = usuario['password']
+        session['imagen_perfil']= usuario['imagen_perfil']
+        session['metodo_pago'] = usuario['metodo_pago']
+        session['idioma']= usuario['idioma']
+        session['genero_favorito']= usuario['genero_favorito']
+
+        # Redirigir al home tras un login exitoso
+        return redirect(url_for('home'))
+    else:
+        # Mostrar mensaje de error en el formulario de login
+        return render_template('login.html', error_message="Credenciales incorrectas. Inténtalo de nuevo.")
+
+    
 @app.route('/registro_post', methods=['POST'])
 def registro_post():
     nombre = request.form.get('nombre')
@@ -45,6 +71,55 @@ def registro_post():
     except Exception as e:
             return redirect(url_for('registro')) 
       
+    
+@app.route('/registro', methods=['GET'])
+def registro():
+    return render_template('registro.html')
+
+
+@app.route('/home') #Al hacer python app.py hay que poner en la ruta /Inicio
+def home():
+    if 'id' not in session:
+        return redirect(url_for('index'))  # Redirigir al login si no está autenticado
+    return render_template('principal.html')
+
+@app.route('/series')
+def series():
+    return render_template('series.html')  # Página de series
+
+@app.route('/peliculas')
+def peliculas():
+    return render_template('peliculas.html')  # Página de películas
+
+@app.route('/mi_lista')
+def mi_lista():
+    return render_template('miLista.html')  # Página de "Mi lista"
+
+@app.route('/search')
+def search():
+    return render_template('search.html')  # Página de "Busqueda"
+
+@app.route('/search_result', methods=['GET', 'POST'])
+def search_result():
+    if request.method == 'POST':
+        # Obtén el término de búsqueda desde el formulario
+        termino_busqueda = request.form.get('query', '').strip()
+
+        # Aquí podrías realizar una búsqueda en la base de datos o lógica personalizada
+        # Por ahora, simplemente muestra el término buscado
+        resultados = f"Resultados para: {termino_busqueda}"
+        
+        #Pueba ejemplo lista(cambiar por BD)
+        resultados = ["Ejemplo 1", "Ejemplo 2"] if termino_busqueda == "prueba" else []
+        
+        # Renderiza una página con los resultados
+        return render_template('search.html', resultados=resultados)
+        #return render_template('search.html', termino=termino_busqueda, resultados=resultados)
+    
+    # Si es GET, muestra la página inicial de búsqueda
+    return render_template('search.html')
+
+
 @app.route('/perfil')
 def perfil():
     if 'id' not in session:
@@ -136,16 +211,13 @@ def edit_perfil():
         
         # Redirige al perfil después de guardar o cancelar
         return redirect(url_for('perfil'))
-    
-@app.route('/registro', methods=['GET'])
-def registro():
-    return render_template('registro.html')
 
-@app.route('/delete', methods=['GET'])
-def delete():
-    if request.method == 'POST':
-        usuarios_controller.usuarios_id_delete(session['id'], session['password'])
-    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('index'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)

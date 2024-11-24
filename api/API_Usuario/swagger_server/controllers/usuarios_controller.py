@@ -1,4 +1,3 @@
-
 import connexion
 import six
 
@@ -84,7 +83,12 @@ def usuarios_id_delete(id, contrasea):  # noqa: E501
 
     :rtype: InlineResponse200
     """
-   
+    usuario = dbconnection.dbGetUser(id)  # Llama a la función para obtener el usuario por ID
+    if usuario and usuario["contrasea"]==contrasea:  # Verifica la contraseña
+        result = dbconnection.dbRemoveUser(id)  # Llama a la función de eliminación en la base de datos
+        if result:
+            return jsonify({"message": "Usuario eliminado exitosamente"}), 200
+    return jsonify({"error": "ID o contraseña incorrectos"}), 404
 
 
 def usuarios_id_genero_favorito_put(body, id):  # noqa: E501
@@ -159,7 +163,15 @@ def usuarios_id_put(body, id):  # noqa: E501
 
 
 def usuarios_post(body):  # noqa: E501
-   
+    """Crear un nuevo usuario
+
+     # noqa: E501
+
+    :param body: Datos necesarios para crear un nuevo usuario
+    :type body: dict | bytes
+
+    :rtype: Usuario
+    """
     
     firstname = body.get("firstname")
     secondname = body.get("secondname")
@@ -172,17 +184,5 @@ def usuarios_post(body):  # noqa: E501
         return jsonify({"error": "Faltan datos"}), 400
 
     # Crear el nuevo usuario
-    nuevo_usuario = dbconnection.dbSignUp( correo=correo,firstname=firstname,secondname=secondname, password=password1,password=password2)
-    
-def usuarios_id_delete(id,password):  # noqa: E501
-    
-    usuario = dbconnection.usuarios_id_get(id)  # Llama a la función para obtener el usuario por ID
-    if usuario and (usuario.password==password):  # Verifica la contraseña
-        result = dbconnection.dbDeleteUserById(id)  # Llama a la función de eliminación en la base de datos
-        if result:
-            return jsonify({"message": "Usuario eliminado exitosamente"}), 200
-    return jsonify({"error": "ID o contraseña incorrectos"}), 404
-    
-    
-
-
+    nuevo_usuario = dbconnection.dbSignUp(correo=correo,firstname=firstname,secondname=secondname, password1=password1,password2=password2)
+    return {"mensaje": "Usuario creado correctamente", "usuario": correo}, 201
