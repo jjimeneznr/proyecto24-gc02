@@ -107,6 +107,41 @@ paths:
         "404":
           description: Usuario no encontrado
       x-openapi-router-controller: swagger_server.controllers.usuarios_controller
+    delete:
+      tags:
+      - Usuarios
+      summary: Eliminar un usuario
+      description: Elimina un usuario existente identificado por su ID y su contraseña.
+      operationId: usuarios_id_delete
+      parameters:
+      - name: id
+        in: path
+        description: ID del usuario a eliminar
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: contrasea
+        in: query
+        description: Contraseña del usuario para confirmar la eliminación
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Usuario eliminado con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "401":
+          description: Contraseña incorrecta
+        "404":
+          description: Usuario no encontrado
+      x-openapi-router-controller: swagger_server.controllers.usuarios_controller
   /usuarios/{id}/correo:
     put:
       tags:
@@ -163,12 +198,12 @@ paths:
         "404":
           description: Usuario no encontrado
       x-openapi-router-controller: swagger_server.controllers.usuarios_controller
-  /usuarios/{id}/generos-favoritos:
+  /usuarios/{id}/genero-favorito:
     put:
       tags:
       - Usuarios
-      summary: Actualizar los géneros favoritos de un usuario
-      operationId: usuarios_id_generos_favoritos_put
+      summary: Actualizar el género favorito de un usuario
+      operationId: usuarios_id_genero_favorito_put
       parameters:
       - name: id
         in: path
@@ -179,17 +214,15 @@ paths:
         schema:
           type: string
       requestBody:
-        description: Lista de nuevos géneros favoritos (máximo 4)
+        description: Nuevo género favorito
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/id_generosfavoritos_body'
+              $ref: '#/components/schemas/id_generofavorito_body'
         required: true
       responses:
         "200":
-          description: Géneros favoritos actualizados con éxito
-        "400":
-          description: Se han enviado mas de 4 generos
+          description: Género favorito actualizado con éxito
         "404":
           description: Usuario no encontrado
       x-openapi-router-controller: swagger_server.controllers.usuarios_controller
@@ -216,17 +249,9 @@ components:
           type: string
           description: "Idioma preferido del usuario (\"español\", \"inglés\", \"\
             portugués\"...)"
-        generos_favoritos:
-          maxItems: 4
-          type: array
-          description: Lista de géneros favoritos del usuario (máximo 4)
-          example:
-          - acción
-          - comedia
-          - drama
-          - ciencia ficción
-          items:
-            type: string
+        genero_favorito:
+          type: string
+          description: Género favorito del usuario
       example:
         nombre_completo: nombre_completo
         imagen_perfil: imagen_perfil
@@ -234,11 +259,7 @@ components:
         idioma: idioma
         id: id
         metodo_pago: metodo_pago
-        generos_favoritos:
-        - acción
-        - comedia
-        - drama
-        - ciencia ficción
+        genero_favorito: comedia
         contraseña: contraseña
     usuarios_body:
       required:
@@ -265,12 +286,9 @@ components:
         idioma:
           type: string
           description: "Idioma preferido (\"español\", \"inglés\", \"portugués\"...)"
-        generos_favoritos:
-          maxItems: 4
-          type: array
-          description: Lista de géneros favoritos del usuario (máximo 4)
-          items:
-            type: string
+        genero_favorito:
+          type: string
+          description: Género favorito del usuario
       example:
         nombre_completo: Fernando García
         correo: fer.garcia@example.com
@@ -278,15 +296,21 @@ components:
         imagen_perfil: https://example.com/perfil.jpg
         metodo_pago: tarjeta de crédito
         idioma: español
-        generos_favoritos:
-        - acción
-        - drama
+        genero_favorito: drama
     usuarios_id_body:
       type: object
       properties:
         nombre_completo:
           type: string
           description: Nuevo nombre completo del usuario
+    inline_response_200:
+      type: object
+      properties:
+        mensaje:
+          type: string
+          example: Usuario eliminado con éxito
+      example:
+        mensaje: Usuario eliminado con éxito
     id_correo_body:
       type: object
       properties:
@@ -299,17 +323,12 @@ components:
         contraseña:
           type: string
           description: Nueva contraseña
-    id_generosfavoritos_body:
+    id_generofavorito_body:
       type: object
       properties:
-        generos_favoritos:
-          maxItems: 4
-          type: array
-          items:
-            type: string
+        genero_favorito:
+          type: string
+          description: Nuevo género favorito
       example:
-        generos_favoritos:
-        - romance
-        - drama
-        - terror
+        genero_favorito: comedia
 
