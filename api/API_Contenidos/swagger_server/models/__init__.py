@@ -3,9 +3,9 @@
 # flake8: noqa
 from __future__ import absolute_import
 # import models into model package
-from swagger_server.models.actor import Actor
-from swagger_server.models.capitulo import Capitulo
-from swagger_server.models.director import Director
-from swagger_server.models.pelicula import Pelicula
-from swagger_server.models.serie import Serie
-from swagger_server.models.temporada import Temporada
+from ..models.actor import Actor
+from ..models.capitulo import Capitulo
+from ..models.director import Director
+from ..models.pelicula import Pelicula
+from ..models.serie import Serie
+from ..models.temporada import Temporada

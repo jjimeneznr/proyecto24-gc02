@@ -1,8 +1,11 @@
 import connexion
 import six
 
-from swagger_server.models.visualizaciones_peliculas import VisualizacionesPeliculas  # noqa: E501
-from swagger_server import util
+from ..models.visualizaciones_peliculas import VisualizacionesPeliculas  # noqa: E501
+from .. import util
+
+from flask import request, jsonify
+from ..... import dbconnection
 
 
 def visualizaciones_peliculas_id_get(id):  # noqa: E501
@@ -15,4 +18,28 @@ def visualizaciones_peliculas_id_get(id):  # noqa: E501
 
     :rtype: VisualizacionesPeliculas
     """
-    return 'do some magic!'
+    return dbconnection.dbGetMovieViews(id)
+
+
+def visualizaciones_peliculas_id_put(body, id):  # noqa: E501
+    """Actualizar las visualizaciones de una película
+
+     # noqa: E501
+
+    :param body: Datos para actualizar las visualizaciones de la película
+    :type body: dict | bytes
+    :param id: ID de las visualizaciones de una película
+    :type id: str
+
+    :rtype: None
+    """
+    # supongo que el id de las visualizaciones coincide con el id del usuario
+    if connexion.request.is_json:
+        body = VisualizacionesPeliculas.from_dict(connexion.request.get_json())  # noqa: E501
+        view = body.num_visualizaciones
+        
+        if dbconnection.dbUpdateMovieViews(id, id, view):
+            return {"mensaje": "Visualizaciones actualizadas correctamente"}, 200
+        else:
+            return {"error": "No se han podido actualizar las visualizaciones"}, 400
+    return {"error": "Solicitud inválida"}, 400

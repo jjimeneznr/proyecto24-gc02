@@ -5,10 +5,8 @@ from datetime import date, datetime  # noqa: F401
 
 from typing import List, Dict  # noqa: F401
 
-from swagger_server.models.base_model_ import Model
-from swagger_server.models.ap_isuario_yamlcomponentsschemasusuarios import APIsuarioYamlcomponentsschemasusuarios  # noqa: F401,E501
-from swagger_server.models.api_contenidoscomponentsschemaspeliculas import APIContenidoscomponentsschemaspeliculas  # noqa: F401,E501
-from swagger_server import util
+from ..models.base_model_ import Model
+from .. import util
 
 
 class RecomendacionesPeliculas(Model):
@@ -16,29 +14,29 @@ class RecomendacionesPeliculas(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id: str=None, usuario: APIsuarioYamlcomponentsschemasusuarios=None, recomendaciones: List[APIContenidoscomponentsschemaspeliculas]=None):  # noqa: E501
+    def __init__(self, id: str=None, usuario_id: int=None, recomendaciones: List[str]=None):  # noqa: E501
         """RecomendacionesPeliculas - a model defined in Swagger
 
         :param id: The id of this RecomendacionesPeliculas.  # noqa: E501
         :type id: str
-        :param usuario: The usuario of this RecomendacionesPeliculas.  # noqa: E501
-        :type usuario: APIsuarioYamlcomponentsschemasusuarios
+        :param usuario_id: The usuario_id of this RecomendacionesPeliculas.  # noqa: E501
+        :type usuario_id: int
         :param recomendaciones: The recomendaciones of this RecomendacionesPeliculas.  # noqa: E501
-        :type recomendaciones: List[APIContenidoscomponentsschemaspeliculas]
+        :type recomendaciones: List[str]
         """
         self.swagger_types = {
             'id': str,
-            'usuario': APIsuarioYamlcomponentsschemasusuarios,
-            'recomendaciones': List[APIContenidoscomponentsschemaspeliculas]
+            'usuario_id': int,
+            'recomendaciones': List[str]
         }
 
         self.attribute_map = {
             'id': 'id',
-            'usuario': 'usuario',
+            'usuario_id': 'usuarioId',
             'recomendaciones': 'recomendaciones'
         }
         self._id = id
-        self._usuario = usuario
+        self._usuario_id = usuario_id
         self._recomendaciones = recomendaciones
 
     @classmethod
@@ -74,43 +72,43 @@ class RecomendacionesPeliculas(Model):
         self._id = id
 
     @property
-    def usuario(self) -> APIsuarioYamlcomponentsschemasusuarios:
-        """Gets the usuario of this RecomendacionesPeliculas.
+    def usuario_id(self) -> int:
+        """Gets the usuario_id of this RecomendacionesPeliculas.
 
 
-        :return: The usuario of this RecomendacionesPeliculas.
-        :rtype: APIsuarioYamlcomponentsschemasusuarios
+        :return: The usuario_id of this RecomendacionesPeliculas.
+        :rtype: int
         """
-        return self._usuario
+        return self._usuario_id
 
-    @usuario.setter
-    def usuario(self, usuario: APIsuarioYamlcomponentsschemasusuarios):
-        """Sets the usuario of this RecomendacionesPeliculas.
+    @usuario_id.setter
+    def usuario_id(self, usuario_id: int):
+        """Sets the usuario_id of this RecomendacionesPeliculas.
 
 
-        :param usuario: The usuario of this RecomendacionesPeliculas.
-        :type usuario: APIsuarioYamlcomponentsschemasusuarios
+        :param usuario_id: The usuario_id of this RecomendacionesPeliculas.
+        :type usuario_id: int
         """
 
-        self._usuario = usuario
+        self._usuario_id = usuario_id
 
     @property
-    def recomendaciones(self) -> List[APIContenidoscomponentsschemaspeliculas]:
+    def recomendaciones(self) -> List[str]:
         """Gets the recomendaciones of this RecomendacionesPeliculas.
 
 
         :return: The recomendaciones of this RecomendacionesPeliculas.
-        :rtype: List[APIContenidoscomponentsschemaspeliculas]
+        :rtype: List[str]
         """
         return self._recomendaciones
 
     @recomendaciones.setter
-    def recomendaciones(self, recomendaciones: List[APIContenidoscomponentsschemaspeliculas]):
+    def recomendaciones(self, recomendaciones: List[str]):
         """Sets the recomendaciones of this RecomendacionesPeliculas.
 
 
         :param recomendaciones: The recomendaciones of this RecomendacionesPeliculas.
-        :type recomendaciones: List[APIContenidoscomponentsschemaspeliculas]
+        :type recomendaciones: List[str]
         """
 
         self._recomendaciones = recomendaciones

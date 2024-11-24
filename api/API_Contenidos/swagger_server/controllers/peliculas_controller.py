@@ -1,10 +1,13 @@
 import connexion
 import six
 
-from swagger_server.models.actor import Actor  # noqa: E501
-from swagger_server.models.director import Director  # noqa: E501
-from swagger_server.models.pelicula import Pelicula  # noqa: E501
-from swagger_server import util
+from ..models.actor import Actor  # noqa: E501
+from ..models.director import Director  # noqa: E501
+from ..models.pelicula import Pelicula  # noqa: E501
+from .. import util
+
+from flask import request, jsonify
+from .... import dbconnection
 
 
 def peliculas_genero_genero_get(genero):  # noqa: E501
@@ -17,7 +20,7 @@ def peliculas_genero_genero_get(genero):  # noqa: E501
 
     :rtype: List[Pelicula]
     """
-    return 'do some magic!'
+    return dbconnection.dbGetMoviesByGenre(genero)
 
 
 def peliculas_get():  # noqa: E501
@@ -28,7 +31,7 @@ def peliculas_get():  # noqa: E501
 
     :rtype: List[Pelicula]
     """
-    return 'do some magic!'
+    return dbconnection.dbGetMovies()
 
 
 def peliculas_id_actores_get(id):  # noqa: E501
@@ -41,7 +44,7 @@ def peliculas_id_actores_get(id):  # noqa: E501
 
     :rtype: List[Actor]
     """
-    return 'do some magic!'
+    return dbconnection.dbGetActorsInMovie(id)
 
 
 def peliculas_id_directores_get(id):  # noqa: E501
@@ -54,7 +57,7 @@ def peliculas_id_directores_get(id):  # noqa: E501
 
     :rtype: List[Director]
     """
-    return 'do some magic!'
+    return dbconnection.dbGetMovieDirector(id)
 
 
 def peliculas_id_get(id):  # noqa: E501
@@ -67,7 +70,7 @@ def peliculas_id_get(id):  # noqa: E501
 
     :rtype: Pelicula
     """
-    return 'do some magic!'
+    return dbconnection.dbGetMovieById(id)
 
 
 def peliculas_titulo_titulo_get(titulo):  # noqa: E501
@@ -80,4 +83,4 @@ def peliculas_titulo_titulo_get(titulo):  # noqa: E501
 
     :rtype: List[Pelicula]
     """
-    return 'do some magic!'
+    return dbconnection.dbGetMoviesByTitle(titulo)
