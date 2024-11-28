@@ -5,18 +5,26 @@ from flask import request, session,jsonify
 import requests
 import connexion
 from api.API_Contenidos.swagger_server import contenidos_blueprint
+<<<<<<< HEAD
 
 from api.API_Contenidos.swagger_server.controllers import peliculas_controller, series_controller
 
+=======
+from api.API_Contenidos.swagger_server.controllers import peliculas_controller, series_controller
+>>>>>>> origin/UP-192-CU10-GestióndepagosySuscripciones
 from api.API_Usuario.swagger_server.controllers import usuarios_controller
 from api.API_Visualizaciones.swagger_server import visualizaciones_blueprint
 
 import dbconnection  # Importar función para validar en la base de datos
 
 app = Flask(__name__)
+<<<<<<< HEAD
 
 app.secret_key = 'SECRETA'
 
+=======
+app.secret_key = 'SECRETA'
+>>>>>>> origin/UP-192-CU10-GestióndepagosySuscripciones
 
 # Registrar cada API con un prefijo de URL
 app.register_blueprint(contenidos_blueprint, url_prefix='/api/contenidos')
@@ -34,12 +42,21 @@ def login():
 
     # Validar las credenciales usando la base de datos
     id_usuario = dbconnection.dbLogIn(email, password)  # Función personalizada que valida en la BD
+<<<<<<< HEAD
     usuario=  usuarios_controller.usuarios_id_get(id_usuario['id'])
     if usuario:  # Si las credenciales son válidas
         session['id'] = usuario['id']
         session['nombre_completo'] = usuario['nombre_completo']
         session['email'] = usuario['email']
         session['password'] = usuario['password']
+=======
+    usuario =  usuarios_controller.usuarios_id_get(1)
+    if usuario:  # Si las credenciales son válidas
+        session['id'] = usuario['id']
+        session['nombre_completo'] = usuario['nombre_completo']
+        session['email'] = usuario['correo']
+        session['password'] = usuario['contrasea']
+>>>>>>> origin/UP-192-CU10-GestióndepagosySuscripciones
         session['imagen_perfil']= usuario['imagen_perfil']
         session['metodo_pago'] = usuario['metodo_pago']
         session['idioma']= usuario['idioma']
@@ -52,7 +69,11 @@ def login():
         return render_template('login.html', error_message="Credenciales incorrectas. Inténtalo de nuevo.")
 
     
+<<<<<<< HEAD
 @app.route('/registro_post', methods=['POST'])
+=======
+@app.route('/registro_post/', methods=['POST'])
+>>>>>>> origin/UP-192-CU10-GestióndepagosySuscripciones
 def registro_post():
     nombre = request.form.get('nombre')
     apellidos=request.form.get('apellidos')
@@ -78,34 +99,57 @@ def registro_post():
             return redirect(url_for('registro')) 
       
     
-@app.route('/registro', methods=['GET'])
+@app.route('/registro/', methods=['GET'])
 def registro():
     return render_template('registro.html')
 
 
-@app.route('/home') #Al hacer python app.py hay que poner en la ruta /Inicio
+@app.route('/home/') 
 def home():
-    if 'id' not in session:
-        return redirect(url_for('index'))  # Redirigir al login si no está autenticado
+    #if 'id' not in session:
+    #    return redirect(url_for('index'))  # Redirigir al login si no está autenticado
     return render_template('principal.html')
 
-@app.route('/series')
+@app.route('/series/')
 def series():
-    return render_template('series.html')  # Página de series
+    data = request.form
+    nombreserie = data.get('query', type=str)
+    if request.method=='GET':
+        series = series_controller.series_titulo_titulo_get("")
+    if request.method=='POST':
+        series = series_controller.series_titulo_titulo_get(nombreserie)
+    return render_template('series.html', series=series)  # Página de series
 
-@app.route('/peliculas')
+@app.route('/peliculas/', methods=['GET', 'POST'])
 def peliculas():
-    return render_template('peliculas.html')  # Página de películas
+    data = request.form
+    nombrepelicula = data.get('query', type=str)
+    if request.method=='GET':
+        peliculas = peliculas_controller.peliculas_titulo_titulo_get("")
+    if request.method=='POST':
+        peliculas = peliculas_controller.peliculas_titulo_titulo_get(nombrepelicula)
+    return render_template('peliculas.html', peliculas=peliculas)  # Página de películas
 
-@app.route('/mi_lista')
+@app.route('/mi_lista/')
 def mi_lista():
-    return render_template('miLista.html')  # Página de "Mi lista"
+    peliculas = dbconnection.dbGetMovieHistory(1)
+    return render_template('miLista.html', peliculas=peliculas)  # Página de "Mi lista"
 
-@app.route('/search')
+@app.route('/search/')
 def search():
     return render_template('search.html')  # Página de "Busqueda"
 
-@app.route('/search_result', methods=['GET', 'POST'])
+@app.route('/search/contenido/', methods=['GET', 'POST'])
+def search_content():
+    data = request.form
+    nombrepelicula = data.get('query', type=str)
+    if request.method=='GET':
+        contenidos = peliculas_controller.peliculas_titulo_titulo_get("")
+    if request.method=='POST':
+        contenidos = peliculas_controller.peliculas_titulo_titulo_get(nombrepelicula)
+    return render_template('content-detail.html', contenidos=contenidos)  # Página de "Busqueda"
+
+@app.route('/search_result/', methods=['GET', 'POST'])
 def search_result():
     if request.method == 'POST':
         # Obtén el término de búsqueda desde el formulario
@@ -116,17 +160,17 @@ def search_result():
         resultados = f"Resultados para: {termino_busqueda}"
         
         #Pueba ejemplo lista(cambiar por BD)
-        resultados = ["Ejemplo 1", "Ejemplo 2"] if termino_busqueda == "prueba" else []
+        resultados = peliculas_controller.peliculas_titulo_titulo_get(termino_busqueda)
         
         # Renderiza una página con los resultados
-        return render_template('search.html', resultados=resultados)
+        return render_template('search.html', peliculas=resultados)
         #return render_template('search.html', termino=termino_busqueda, resultados=resultados)
     
     # Si es GET, muestra la página inicial de búsqueda
     return render_template('search.html')
 
 
-@app.route('/perfil')
+@app.route('/perfil/')
 def perfil():
     if 'id' not in session:
         return redirect(url_for('login'))  # Redirige al login si no hay sesión activa
@@ -139,7 +183,7 @@ def perfil():
     }
     return render_template('user-profile.html', user_data=user_data)
 
-@app.route('/edit_perfil', methods=['GET', 'POST'])
+@app.route('/edit_perfil/', methods=['GET', 'POST'])
 def edit_perfil():
     if request.method == 'GET':
         id_usuario = session['id']
@@ -219,7 +263,7 @@ def edit_perfil():
         return redirect(url_for('perfil'))
 
 
-@app.route('/logout')
+@app.route('/logout/')
 def logout():
     session.clear()
     return redirect(url_for('index'))
