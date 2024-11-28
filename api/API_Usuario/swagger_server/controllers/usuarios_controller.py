@@ -12,7 +12,8 @@ from ..models.usuarios_id_body import UsuariosIdBody  # noqa: E501
 from .. import util
 
 from flask import request, jsonify
-from ..... import dbconnection 
+from .... import dbconnection 
+
 import oracledb
 from flask import jsonify, request
 
@@ -128,11 +129,7 @@ def usuarios_id_get(id):  # noqa: E501
     :rtype: Usuario
     """
 
-    usuario = dbconnection.dbGetUser(id) # Supongo que esta función existe en `dbconnection`.
-    if usuario:
-        return jsonify(usuario), 200
-    return {"error": "Usuario no encontrado"}, 404
-   
+    return dbconnection.dbGetUser(id) # Supongo que esta función existe en `dbconnection`.
 
 
 def usuarios_id_put(body, id):  # noqa: E501

@@ -5,8 +5,8 @@ from __future__ import absolute_import
 from flask import json
 from six import BytesIO
 
-from swagger_server.models.director import Director  # noqa: E501
-from swagger_server.test import BaseTestCase
+from ..models.director import Director  # noqa: E501
+from ..test import BaseTestCase
 
 
 class TestDirectoresController(BaseTestCase):

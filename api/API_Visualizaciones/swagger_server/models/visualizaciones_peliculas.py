@@ -5,9 +5,8 @@ from datetime import date, datetime  # noqa: F401
 
 from typing import List, Dict  # noqa: F401
 
-from swagger_server.models.base_model_ import Model
-from swagger_server.models.api_contenidoscomponentsschemaspeliculas import APIContenidoscomponentsschemaspeliculas  # noqa: F401,E501
-from swagger_server import util
+from ..models.base_model_ import Model
+from .. import util
 
 
 class VisualizacionesPeliculas(Model):
@@ -15,29 +14,29 @@ class VisualizacionesPeliculas(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id: str=None, serie: APIContenidoscomponentsschemaspeliculas=None, num_visualizaciones: int=None):  # noqa: E501
+    def __init__(self, id: str=None, pelicula_id: str=None, num_visualizaciones: int=None):  # noqa: E501
         """VisualizacionesPeliculas - a model defined in Swagger
 
         :param id: The id of this VisualizacionesPeliculas.  # noqa: E501
         :type id: str
-        :param serie: The serie of this VisualizacionesPeliculas.  # noqa: E501
-        :type serie: APIContenidoscomponentsschemaspeliculas
+        :param pelicula_id: The pelicula_id of this VisualizacionesPeliculas.  # noqa: E501
+        :type pelicula_id: str
         :param num_visualizaciones: The num_visualizaciones of this VisualizacionesPeliculas.  # noqa: E501
         :type num_visualizaciones: int
         """
         self.swagger_types = {
             'id': str,
-            'serie': APIContenidoscomponentsschemaspeliculas,
+            'pelicula_id': str,
             'num_visualizaciones': int
         }
 
         self.attribute_map = {
             'id': 'id',
-            'serie': 'serie',
+            'pelicula_id': 'peliculaId',
             'num_visualizaciones': 'numVisualizaciones'
         }
         self._id = id
-        self._serie = serie
+        self._pelicula_id = pelicula_id
         self._num_visualizaciones = num_visualizaciones
 
     @classmethod
@@ -73,25 +72,25 @@ class VisualizacionesPeliculas(Model):
         self._id = id
 
     @property
-    def serie(self) -> APIContenidoscomponentsschemaspeliculas:
-        """Gets the serie of this VisualizacionesPeliculas.
+    def pelicula_id(self) -> str:
+        """Gets the pelicula_id of this VisualizacionesPeliculas.
 
 
-        :return: The serie of this VisualizacionesPeliculas.
-        :rtype: APIContenidoscomponentsschemaspeliculas
+        :return: The pelicula_id of this VisualizacionesPeliculas.
+        :rtype: str
         """
-        return self._serie
+        return self._pelicula_id
 
-    @serie.setter
-    def serie(self, serie: APIContenidoscomponentsschemaspeliculas):
-        """Sets the serie of this VisualizacionesPeliculas.
+    @pelicula_id.setter
+    def pelicula_id(self, pelicula_id: str):
+        """Sets the pelicula_id of this VisualizacionesPeliculas.
 
 
-        :param serie: The serie of this VisualizacionesPeliculas.
-        :type serie: APIContenidoscomponentsschemaspeliculas
+        :param pelicula_id: The pelicula_id of this VisualizacionesPeliculas.
+        :type pelicula_id: str
         """
 
-        self._serie = serie
+        self._pelicula_id = pelicula_id
 
     @property
     def num_visualizaciones(self) -> int:

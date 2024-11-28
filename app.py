@@ -5,12 +5,18 @@ from flask import request, session,jsonify
 import requests
 import connexion
 from api.API_Contenidos.swagger_server import contenidos_blueprint
+
+from api.API_Contenidos.swagger_server.controllers import peliculas_controller, series_controller
+
 from api.API_Usuario.swagger_server.controllers import usuarios_controller
 from api.API_Visualizaciones.swagger_server import visualizaciones_blueprint
 
 import dbconnection  # Importar función para validar en la base de datos
 
 app = Flask(__name__)
+
+app.secret_key = 'SECRETA'
+
 
 # Registrar cada API con un prefijo de URL
 app.register_blueprint(contenidos_blueprint, url_prefix='/api/contenidos')

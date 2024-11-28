@@ -34,31 +34,42 @@
     </nav>
 
     <!-- Contenedor principal de series -->
-    <div class="series-container">
+    <main class="series-container">
         <!-- Series populares -->
-        <section class="row">
-            <h2 class="row-header">Populares en Netflix</h2>
-            <div class="thumbnails">
-                <div class="thumbnail">
-                    <img src="serie1.jpg" alt="Serie 1">
-                </div>
-                <div class="thumbnail">
-                    <img src="serie2.jpg" alt="Serie 2">
-                </div>
-                <div class="thumbnail">
-                    <img src="serie3.jpg" alt="Serie 3">
-                </div>
-                <div class="thumbnail">
-                    <img src="serie4.jpg" alt="Serie 4">
-                </div>
-                <div class="thumbnail">
-                    <img src="serie5.jpg" alt="Serie 5">
-                </div>
-                <div class="thumbnail">
-                    <img src="serie6.jpg" alt="Serie 6">
-                </div>
+        <div class="search-filters">
+            <button class="filter-btn active">Todo</button>
+            <button class="filter-btn">Películas</button>
+            <button class="filter-btn">Series</button>
+            <button class="filter-btn">Documentales</button>
+        </div>
+        <div class="search-results" id="search-results">
+            <h2>Resultados populares</h2>
+            <div class="results-grid">
+                {% if series %}
+                    {% for serie in series %}
+                        <div class="result-card">
+                            <img src="movie1.png" alt="Título 1">
+                            <div class="result-info">
+                                <a href="{{url_for('search_content')}}">{{serie.titulo}}</a>
+                                <div class="meta-info">
+                                    <span class="duration">Duración: {{serie.duracion}}</span>
+                                    <span class="match">98% coincidencia</span>
+                                </div>
+                                <div class="tags">
+                                    <span>{{serie.genero}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                <!-- Más tarjetas de resultados... -->
             </div>
-        </section>
+
+            <h2>También te podría gustar</h2>
+            <div class="results-grid">
+                <!-- Más resultados... -->
+            </div>
+        </div>
 
         <!-- Series tendencia -->
         <section class="row">
@@ -86,6 +97,6 @@
         </section>
 
        
-    </div>
+    </main>
 </body>
 </html>

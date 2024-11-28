@@ -40,61 +40,46 @@
             <button class="filter-btn">Series</button>
             <button class="filter-btn">Documentales</button>
         </div>
-    
-        {% if resultados %}
-        <script type="text/javascript">
-            // Get the elements to be iterated
-            let htmlElements = document.getElementsByTagName("p");
-    
-            // Use the for...in statement to get the indices
-            for (let index in htmlElements) {
-                if (htmlElements.hasOwnProperty(index)) {
-                    // Print the current element
-                    console.log(htmlElements[index]);
-                }
-            }
-        </script>
-        
-            <!-- Si hay resultados -->
-            <div class="search-results">
-                <h2>Resultados populares</h2>
-                <div class="results-grid">
-                    <div class="result-card">
-                        <img src="movie1.jpg" alt="Título 1">
-                        <div class="result-info">
-                            <h3>Título de la Película</h3>
-                            <div class="meta-info">
-                                <span class="year">2024</span>
-                                <span class="match">98% coincidencia</span>
-                            </div>
-                            <div class="tags">
-                                <span>Acción</span>
-                                <span>Aventura</span>
-                                <span>Sci-Fi</span>
+        <div class="search-results" id="search-results">
+            <h2>Resultados populares</h2>
+            <div class="results-grid">
+                {% if peliculas %}
+                    {% for pelicula in peliculas %}
+                        <div class="result-card">
+                            <img src="movie1.png" alt="Título 1">
+                            <div class="result-info">
+                                <a href="{{url_for('search_content')}}">{{pelicula.titulo}}</a>
+                                <div class="meta-info">
+                                    <span class="duration">Duración: {{pelicula.duracion}}</span>
+                                    <span class="match">98% coincidencia</span>
+                                </div>
+                                <div class="tags">
+                                    <span>{{pelicula.genero}}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- Más tarjetas de resultados... -->
-                </div>
-    
-                <h2>También te podría gustar</h2>
-                <div class="results-grid">
-                    <!-- Más resultados... -->
-                </div>
+                    {% endfor %}
+                {% endif %}
+                <!-- Más tarjetas de resultados... -->
             </div>
-        {% else %}
-            <!-- Si no hay resultados -->
-            <div class="no-results">
-                <p>Tu búsqueda no produjo ningún resultado.</p>
-                <p>Sugerencias:</p>
-                <ul>
-                    <li>Intenta con otras palabras clave</li>
-                    <li>¿Estás buscando una película o serie?</li>
-                    <li>Prueba usando el título de una película o serie</li>
-                    <li>Prueba buscar por actor o director</li>
-                </ul>
+
+            <h2>También te podría gustar</h2>
+            <div class="results-grid">
+                <!-- Más resultados... -->
             </div>
-        {% endif %}
+        </div>
+
+        <!-- Sección de búsqueda sin resultados (inicialmente oculta) -->
+        <div class="no-results" style="display: none;">
+            <p>Tu búsqueda no produjo ningún resultado.</p>
+            <p>Sugerencias:</p>
+            <ul>
+                <li>Intenta con otras palabras clave</li>
+                <li>¿Estás buscando una película o serie?</li>
+                <li>Prueba usando el título de una película o serie</li>
+                <li>Prueba buscar por actor o director</li>
+            </ul>
+        </div>
     </main>
     
 </body>

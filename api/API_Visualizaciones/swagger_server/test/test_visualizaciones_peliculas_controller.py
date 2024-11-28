@@ -5,8 +5,8 @@ from __future__ import absolute_import
 from flask import json
 from six import BytesIO
 
-from swagger_server.models.visualizaciones_peliculas import VisualizacionesPeliculas  # noqa: E501
-from swagger_server.test import BaseTestCase
+from ..models.visualizaciones_peliculas import VisualizacionesPeliculas  # noqa: E501
+from ..test import BaseTestCase
 
 
 class TestVisualizacionesPeliculasController(BaseTestCase):
@@ -20,6 +20,20 @@ class TestVisualizacionesPeliculasController(BaseTestCase):
         response = self.client.open(
             '/visualizacionesPeliculas/{id}'.format(id='id_example'),
             method='GET')
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+    def test_visualizaciones_peliculas_id_put(self):
+        """Test case for visualizaciones_peliculas_id_put
+
+        Actualizar las visualizaciones de una película
+        """
+        body = VisualizacionesPeliculas()
+        response = self.client.open(
+            '/visualizacionesPeliculas/{id}/update'.format(id='id_example'),
+            method='PUT',
+            data=json.dumps(body),
+            content_type='application/json')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 

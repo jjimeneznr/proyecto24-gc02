@@ -1,16 +1,16 @@
 import oracledb as db
 #from . import database
-from api.API_Contenidos.swagger_server.models.pelicula import Pelicula
-from api.API_Contenidos.swagger_server.models.actor import Actor
-from api.API_Contenidos.swagger_server.models.director import Director
-from api.API_Contenidos.swagger_server.models.capitulo import Capitulo
-from api.API_Contenidos.swagger_server.models.serie import Serie
-from api.API_Contenidos.swagger_server.models.temporada import Temporada
-from api.API_Usuario.swagger_server.models.usuario import Usuario
-from api.API_Visualizaciones.swagger_server.models.visualizaciones_peliculas import VisualizacionesPeliculas
-from api.API_Visualizaciones.swagger_server.models.visualizaciones_series import VisualizacionesSeries
-from api.API_Visualizaciones.swagger_server.models.recomendaciones_peliculas import RecomendacionesPeliculas
-from api.API_Visualizaciones.swagger_server.models.recomendaciones_series import RecomendacionesSeries
+from .API_Contenidos.swagger_server.models.pelicula import Pelicula
+from .API_Contenidos.swagger_server.models.actor import Actor
+from .API_Contenidos.swagger_server.models.director import Director
+from .API_Contenidos.swagger_server.models.capitulo import Capitulo
+from .API_Contenidos.swagger_server.models.serie import Serie
+from .API_Contenidos.swagger_server.models.temporada import Temporada
+from .API_Usuario.swagger_server.models.usuario import Usuario
+from .API_Visualizaciones.swagger_server.models.visualizaciones_peliculas import VisualizacionesPeliculas
+from .API_Visualizaciones.swagger_server.models.visualizaciones_series import VisualizacionesSeries
+from .API_Visualizaciones.swagger_server.models.recomendaciones_peliculas import RecomendacionesPeliculas
+from .API_Visualizaciones.swagger_server.models.recomendaciones_series import RecomendacionesSeries
 
 def dbConectar():
     ip = "localhost"
@@ -75,14 +75,14 @@ def dbLogIn(email=str, password=str):
                 print('Usuario y contraseña correctos')
             else:
                 print('La contraseña no es correcta')
-                return False
+                return resul
         else:
             print("Usuario no existente:",cursor.rowcount)
             return False
         print('------------------------------')
         cursor.close()
         conexion.commit()
-        return 0
+        return True
     except db.DatabaseError as error:
         print("Error. No se ha podido iniciar sesión")
         print(error)
@@ -746,18 +746,4 @@ def dbSerieRecomendations(user_id):
         print("Error. No se han podido obtener las recomendaciones de series")
         print(error)
 
-def dbGetMovieHistory(user_id):
-    try:
-        cursor = conexion.cursor()
-        consul = "SELECT movie FROM asee_user_movie WHERE user_id = :user_id"
-        cursor.execute(consul, [user_id,])
-        peliculas = []
-        for tupla in cursor:
-            pelicula = dbGetMovieById(tupla[0])
-            peliculas.append(pelicula)
-        return peliculas
-    except db.DatabaseError as error:
-        print("Error. No se han podido actualizar las visualizaciones de usuario")
-        print(error)
-        return False
 conexion = dbConectar()
