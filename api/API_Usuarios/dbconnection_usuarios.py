@@ -49,6 +49,40 @@ def dbSignUp(email=str, firstName=str, secondName=str, password1=str, password2=
         print(error)
         return False
 
+
+def dbLogIn(email=str, password=str):
+    print("---dbLogIn---")
+
+    try:
+        cursor = conexion_usuarios.cursor()
+        print(email)
+        print(password)
+        consulta = "SELECT user_id,email, passwd FROM asee_users WHERE email = :email AND passwd = :password"
+        cursor.execute(consulta, [email, password])
+        resul = cursor.fetchone()
+        if(cursor.rowcount == 1):
+            print("Usuario encontrado correctamente")
+            if(resul[2] == password):
+                print('Usuario y contraseña correctos')
+            else:
+                print('La contraseña no es correcta')
+                return False
+        else:
+            print("Usuario no existente:",cursor.rowcount)
+            return False
+        print('------------------------------')
+        
+        cursor.close()
+        if resul[0] is None:
+            return None
+        else:
+            return resul[0]
+       
+    except db.DatabaseError as error:
+        print("Error. No se ha podido iniciar sesión")
+        print(error)
+        return False
+
 def dbPrint():
     try:
         cursor = conexion_usuarios.cursor()

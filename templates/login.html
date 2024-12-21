@@ -4,14 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Netflix - Iniciar Sesión</title>
-    <link rel="stylesheet" href="../static/css/styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
 </head>
 <body>
     <div class="background">
         <div class="overlay"></div>
+        <div class="image-overlay"> <img src="{{ url_for('static', filename='imagenes/logo.png') }}" alt="Netflix" class="logo"></div>
+        
+        <div class="image-overlay2"> <img src="{{ url_for('static', filename='imagenes/logo.png') }}" alt="Netflix" class="logo"></div>
         <div class="login-container">
             <h2 class="login-title">Iniciar sesión</h2>
-            <form action="#" method="POST">
+           
+            <form action="/" method="POST">
                 <div class="form-group">
                     <input type="email" id="email" name="email" required>
                     <label for="email">Email o número de teléfono</label>
@@ -34,8 +38,7 @@
             </form>
             
             <div class="signup">
-                <p>¿Primera vez en Netflix? <a href="#">Suscríbete ahora</a></p>
-            </div>
+                <p>¿Primera vez en Netflix? <a href="{{ url_for('registro') }}" class="boton">Suscríbete ahora</a></p>
         </div>
     </div>
 </body>

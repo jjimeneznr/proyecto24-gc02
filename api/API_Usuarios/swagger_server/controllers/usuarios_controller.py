@@ -172,6 +172,7 @@ def usuarios_post(body):  # noqa: E501
 
     :rtype: Usuario
     """
+    
     firstname = body.get("firstname")
     secondname = body.get("secondname")
     correo = body.get("correo")
