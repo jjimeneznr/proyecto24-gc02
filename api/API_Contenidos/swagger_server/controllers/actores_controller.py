@@ -1,9 +1,11 @@
 import connexion
 import six
 
-from swagger_server.models.actor import Actor  # noqa: E501
-from swagger_server import util
+from ..models.actor import Actor  # noqa: E501
+from .. import util
 
+from flask import request, jsonify
+from ... import dbconnection_contenidos as db
 
 def actores_get():  # noqa: E501
     """Obtener todos los actores
@@ -13,8 +15,11 @@ def actores_get():  # noqa: E501
 
     :rtype: List[Actor]
     """
-    return 'do some magic!'
-
+    actors = []
+    for info in db.dbGetActors():
+        actor = Actor(info[0], info[1], info[2])
+        actors.append(actor.to_dict())
+    return actors
 
 def actores_id_get(id):  # noqa: E501
     """Obtener actor por id
@@ -26,4 +31,6 @@ def actores_id_get(id):  # noqa: E501
 
     :rtype: Actor
     """
-    return 'do some magic!'
+    info = db.dbGetActor(id)
+    actor = Actor(info[0], info[1], info[2])
+    return actor.to_dict()

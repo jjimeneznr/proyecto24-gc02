@@ -5,11 +5,11 @@ from datetime import date, datetime  # noqa: F401
 
 from typing import List, Dict  # noqa: F401
 
-from swagger_server.models.base_model_ import Model
-from swagger_server.models.actor import Actor  # noqa: F401,E501
-from swagger_server.models.capitulo import Capitulo  # noqa: F401,E501
-from swagger_server.models.temporada import Temporada  # noqa: F401,E501
-from swagger_server import util
+from ..models.base_model_ import Model
+from ..models.actor import Actor  # noqa: F401,E501
+from ..models.capitulo import Capitulo  # noqa: F401,E501
+from ..models.temporada import Temporada  # noqa: F401,E501
+from .. import util
 
 
 class Serie(Model):
@@ -17,7 +17,7 @@ class Serie(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id: str=None, titulo: str=None, genero: str=None, descripcion: str=None, actores: List[Actor]=None, temporadas: List[Temporada]=None, capitulos: List[Capitulo]=None):  # noqa: E501
+    def __init__(self, id: str=None, titulo: str=None, genero: str=None, descripcion: str=None, actores: List[Actor]=None, temporadas: List[Temporada]=None):  # noqa: E501
         """Serie - a model defined in Swagger
 
         :param id: The id of this Serie.  # noqa: E501
@@ -32,8 +32,6 @@ class Serie(Model):
         :type actores: List[Actor]
         :param temporadas: The temporadas of this Serie.  # noqa: E501
         :type temporadas: List[Temporada]
-        :param capitulos: The capitulos of this Serie.  # noqa: E501
-        :type capitulos: List[Capitulo]
         """
         self.swagger_types = {
             'id': str,
@@ -41,8 +39,7 @@ class Serie(Model):
             'genero': str,
             'descripcion': str,
             'actores': List[Actor],
-            'temporadas': List[Temporada],
-            'capitulos': List[Capitulo]
+            'temporadas': List[Temporada]
         }
 
         self.attribute_map = {
@@ -51,8 +48,7 @@ class Serie(Model):
             'genero': 'genero',
             'descripcion': 'descripcion',
             'actores': 'actores',
-            'temporadas': 'temporadas',
-            'capitulos': 'capitulos'
+            'temporadas': 'temporadas'
         }
         self._id = id
         self._titulo = titulo
@@ -60,7 +56,6 @@ class Serie(Model):
         self._descripcion = descripcion
         self._actores = actores
         self._temporadas = temporadas
-        self._capitulos = capitulos
 
     @classmethod
     def from_dict(cls, dikt) -> 'Serie':
@@ -199,23 +194,3 @@ class Serie(Model):
 
         self._temporadas = temporadas
 
-    @property
-    def capitulos(self) -> List[Capitulo]:
-        """Gets the capitulos of this Serie.
-
-
-        :return: The capitulos of this Serie.
-        :rtype: List[Capitulo]
-        """
-        return self._capitulos
-
-    @capitulos.setter
-    def capitulos(self, capitulos: List[Capitulo]):
-        """Sets the capitulos of this Serie.
-
-
-        :param capitulos: The capitulos of this Serie.
-        :type capitulos: List[Capitulo]
-        """
-
-        self._capitulos = capitulos

@@ -1,9 +1,11 @@
 import connexion
 import six
 
-from swagger_server.models.director import Director  # noqa: E501
-from swagger_server import util
+from ..models.director import Director  # noqa: E501
+from .. import util
 
+from flask import request, jsonify
+from ... import dbconnection_contenidos as db
 
 def directores_get():  # noqa: E501
     """Obtener todos los directores
@@ -13,7 +15,11 @@ def directores_get():  # noqa: E501
 
     :rtype: List[Director]
     """
-    return 'do some magic!'
+    directors = []
+    for info in db.dbGetDirectors():
+        director = Director(info[0], info[1], info[2])
+        directors.append(director.to_dict())
+    return directors
 
 
 def directores_id_get(id):  # noqa: E501
@@ -26,4 +32,6 @@ def directores_id_get(id):  # noqa: E501
 
     :rtype: Director
     """
-    return 'do some magic!'
+    info = db.dbGetDirectorById(id)
+    director = Director(info[0], info[1], info[2])
+    return director.to_dict()

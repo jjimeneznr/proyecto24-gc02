@@ -1,10 +1,12 @@
 import connexion
 import six
 
-from swagger_server.models.actor import Actor  # noqa: E501
-from swagger_server.models.director import Director  # noqa: E501
-from swagger_server.models.pelicula import Pelicula  # noqa: E501
-from swagger_server import util
+from ..models.pelicula import Pelicula  # noqa: E501
+from .. import util
+from . import actores_controller, directores_controller
+
+from flask import request, jsonify
+from ... import dbconnection_contenidos as db
 
 
 def peliculas_genero_genero_get(genero):  # noqa: E501
@@ -17,7 +19,11 @@ def peliculas_genero_genero_get(genero):  # noqa: E501
 
     :rtype: List[Pelicula]
     """
-    return 'do some magic!'
+    movies = []
+    for info in db.dbGetMoviesByGenre(genero):
+        movie = Pelicula(info[0], info[1], info[2], info[3], peliculas_id_directores_get(info[0]), peliculas_id_actores_get(info[0]), info[5])
+        movies.append(movie.to_dict())
+    return movies
 
 
 def peliculas_get():  # noqa: E501
@@ -28,7 +34,11 @@ def peliculas_get():  # noqa: E501
 
     :rtype: List[Pelicula]
     """
-    return 'do some magic!'
+    movies = []
+    for info in db.dbGetMovies():
+        movie = Pelicula(info[0], info[1], info[2], info[3], peliculas_id_directores_get(info[0]), peliculas_id_actores_get(info[0]), info[5])
+        movies.append(movie.to_dict())
+    return movies
 
 
 def peliculas_id_actores_get(id):  # noqa: E501
@@ -41,7 +51,11 @@ def peliculas_id_actores_get(id):  # noqa: E501
 
     :rtype: List[Actor]
     """
-    return 'do some magic!'
+    actors = []
+    for info in db.dbGetActorsInMovie(id):
+        actor = actores_controller.actores_id_get(info[0])
+        actors.append(actor)
+    return actors
 
 
 def peliculas_id_directores_get(id):  # noqa: E501
@@ -54,7 +68,9 @@ def peliculas_id_directores_get(id):  # noqa: E501
 
     :rtype: List[Director]
     """
-    return 'do some magic!'
+    info = db.dbGetMovieDirector(id)
+    director = directores_controller.directores_id_get(info[0])
+    return director
 
 
 def peliculas_id_get(id):  # noqa: E501
@@ -67,7 +83,9 @@ def peliculas_id_get(id):  # noqa: E501
 
     :rtype: Pelicula
     """
-    return 'do some magic!'
+    info = db.dbGetMovieById(id)
+    movie = Pelicula(info[0], info[1], info[2], info[3], peliculas_id_directores_get(info[0]), peliculas_id_actores_get(info[0]), info[5])
+    return movie.to_dict()
 
 
 def peliculas_titulo_titulo_get(titulo):  # noqa: E501
@@ -80,4 +98,8 @@ def peliculas_titulo_titulo_get(titulo):  # noqa: E501
 
     :rtype: List[Pelicula]
     """
-    return 'do some magic!'
+    movies = []
+    for info in db.dbGetMoviesByTitle(titulo):
+        movie = Pelicula(info[0], info[1], info[2], info[3], peliculas_id_directores_get(info[0]), peliculas_id_actores_get(info[0]), info[5])
+        movies.append(movie.to_dict())
+    return movies

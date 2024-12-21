@@ -1,9 +1,13 @@
 import connexion
 import six
 
-from swagger_server.models.temporada import Temporada  # noqa: E501
-from swagger_server import util
+from . import capitulos_controller
 
+from ..models.temporada import Temporada  # noqa: E501
+from .. import util
+
+from flask import request, jsonify
+from ... import dbconnection_contenidos as db
 
 def series_id_temporadas_get(id):  # noqa: E501
     """Obtener todas las temporadas de una serie
@@ -15,4 +19,8 @@ def series_id_temporadas_get(id):  # noqa: E501
 
     :rtype: List[Temporada]
     """
-    return 'do some magic!'
+    seasons = []
+    for info in db.dbGetSeasonsOfSerie(id):
+        season = Temporada(info[0], info[2], info[3], capitulos_controller.series_id_temporadas_temporada_id_capitulos_get(id, info[0]))
+        seasons.append(season.to_dict())
+    return seasons

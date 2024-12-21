@@ -5,10 +5,10 @@ from __future__ import absolute_import
 from flask import json
 from six import BytesIO
 
-from swagger_server.models.actor import Actor  # noqa: E501
-from swagger_server.models.director import Director  # noqa: E501
-from swagger_server.models.serie import Serie  # noqa: E501
-from swagger_server.test import BaseTestCase
+from ..models.actor import Actor  # noqa: E501
+from ..models.director import Director  # noqa: E501
+from ..models.serie import Serie  # noqa: E501
+from ..test import BaseTestCase
 
 
 class TestSeriesController(BaseTestCase):
