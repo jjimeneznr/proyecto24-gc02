@@ -1,14 +1,20 @@
 import connexion
 import six
 
-from swagger_server.models.id_contrasea_body import IdContraseaBody  # noqa: E501
-from swagger_server.models.id_correo_body import IdCorreoBody  # noqa: E501
-from swagger_server.models.id_generofavorito_body import IdGenerofavoritoBody  # noqa: E501
-from swagger_server.models.inline_response200 import InlineResponse200  # noqa: E501
-from swagger_server.models.usuario import Usuario  # noqa: E501
-from swagger_server.models.usuarios_body import UsuariosBody  # noqa: E501
-from swagger_server.models.usuarios_id_body import UsuariosIdBody  # noqa: E501
-from swagger_server import util
+from ..models.id_contrasea_body import IdContraseaBody  # noqa: E501
+from ..models.id_correo_body import IdCorreoBody  # noqa: E501
+from ..models.id_generofavorito_body import IdGenerofavoritoBody  # noqa: E501
+from ..models.inline_response200 import InlineResponse200  # noqa: E501
+from ..models.usuario import Usuario  # noqa: E501
+from ..models.usuarios_body import UsuariosBody  # noqa: E501
+from ..models.usuarios_id_body import UsuariosIdBody  # noqa: E501
+from .. import util
+
+from flask import request, jsonify
+from ... import dbconnection_usuarios as db 
+
+import oracledb
+from flask import jsonify, request
 
 
 def usuarios_id_contrasea_put(body, id):  # noqa: E501
@@ -117,6 +123,16 @@ def usuarios_post(body):  # noqa: E501
 
     :rtype: Usuario
     """
-    if connexion.request.is_json:
-        body = UsuariosBody.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+    firstname = body.get("firstname")
+    secondname = body.get("secondname")
+    correo = body.get("correo")
+    password1 = body.get("password1")
+    password2 = body.get("password2")
+
+    # Validar los datos
+    if not all([firstname ,secondname , correo , password1 ,password2]):
+        return jsonify({"error": "Faltan datos"}), 400
+
+    # Crear el nuevo usuario
+    nuevo_usuario = db.dbSignUp(correo=correo,firstname=firstname,secondname=secondname, password1=password1,password2=password2)
+    return {"mensaje": "Usuario creado correctamente", "usuario": correo}, 201
