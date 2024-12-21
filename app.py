@@ -157,6 +157,25 @@ def edit_perfil():
         # Redirige al perfil después de guardar o cancelar
         return redirect(url_for('perfil'))
 
+@app.route('/remove_user/', methods=['POST'])
+def remove_user():
+    # Verificar si el usuario está autenticado
+    if 'id' not in session:
+        return redirect(url_for('login'))  # Redirige a la página de login si no está autenticado
+
+    try:
+        # Llamada a la función para eliminar el usuario de la base de datos
+        
+        resultado = usuarios_controller.usuarios_id_delete(session['id'])
+
+        if  resultado:
+            session.clear()  # Limpia la sesión después de eliminar la cuenta
+            return redirect(url_for('index'))  # Redirige al índice después de eliminar
+        else:
+            return "Error al eliminar el usuario", 500  # Código de error
+    except Exception as e:
+        print("Error al eliminar el usuario:", e)
+        return "Error interno del servidor", 500
 
 
 if __name__ == '__main__':
