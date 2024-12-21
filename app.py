@@ -4,18 +4,23 @@ from flask import redirect, url_for
 from flask import request, session,jsonify
 import requests
 
-from api.API_Contenidos.swagger_server.controllers import peliculas_controller, series_controller
-from api.API_Usuarios.swagger_server.controllers import usuarios_controller
+from API_Contenidos.swagger_server import contenidos_blueprint
+from API_Contenidos.swagger_server.controllers import peliculas_controller, series_controller
+from API_Usuario.swagger_server.controllers import usuarios_controller
+from API_Visualizaciones.swagger_server import visualizaciones_blueprint
 
-
-
-from api.API_Usuarios import dbconnection_usuarios
+from API_Contenidos import dbconnection_contenidos
+from API_Usuario import dbconnection_usuarios
+from API_Visualizaciones import dbconnection_visualizaciones
 
 app = Flask(__name__)
 app.secret_key = 'SECRETA'
 app.config['SESSION_TYPE'] = 'filesystem' 
 
-
+# Registrar cada API con un prefijo de URL
+app.register_blueprint(contenidos_blueprint, url_prefix='/api/contenidos')
+app.register_blueprint(visualizaciones_blueprint, url_prefix='/api/visualizaciones')
+ 
 @app.route('/')
 def index():
     return render_template('login.html')
@@ -91,6 +96,100 @@ def home():
         return redirect(url_for('index'))  # Redirigir al login si no está autenticado
     return render_template('principal.html')
 
+@app.route('/series/')
+def series():
+    data = request.form
+    nombreserie = data.get('query', type=str)
+    if request.method=='GET':
+        series = series_controller.series_titulo_titulo_get("")
+    if request.method=='POST':
+        series = series_controller.series_titulo_titulo_get(nombreserie)
+    return render_template('series.html', series=series)  # Página de series
+
+@app.route('/peliculas/', methods=['GET', 'POST'])
+def peliculas():
+    data = request.form
+    nombrepelicula = data.get('query', type=str)
+    if request.method=='GET':
+        peliculas = peliculas_controller.peliculas_titulo_titulo_get("")
+    if request.method=='POST':
+        peliculas = peliculas_controller.peliculas_titulo_titulo_get(nombrepelicula)
+    return render_template('peliculas.html', peliculas=peliculas)  # Página de películas
+
+@app.route('/mi_lista/')
+def mi_lista():
+    peliculas_id = dbconnection_visualizaciones.dbGetMovieHistory(1)
+    peliculas = []
+    for x in peliculas_id:
+        print(x)
+        peliculas.append(peliculas_controller.peliculas_id_get(x[0]))
+
+    return render_template('miLista.html', peliculas=peliculas)  # Página de "Mi lista"
+
+@app.route('/search/')
+def search():
+    return render_template('search.html')  # Página de "Busqueda"
+
+@app.route('/contenido/pelicula/<movie_id>', methods=['GET', 'POST'])
+def search_content_movie(movie_id):
+    print('ID DE LA PELICULA QUE SE VA A MOSTRAR: ', movie_id)
+    if request.method=='GET':
+        info = peliculas_controller.peliculas_id_get(movie_id)
+    if request.method=='POST':
+        info = None
+
+    return render_template('content-detail.html', contenidos=info)  # Página de "Busqueda"
+
+@app.route('/contenido/serie/<serie_id>', methods=['GET', 'POST'])
+def search_content_serie(serie_id):
+    print('ID DE LA SERIE QUE SE VA A MOSTRAR: ', serie_id)
+    info = series_controller.series_id_get(serie_id)
+    if request.method=='GET':
+        season = 2
+    if request.method=='POST':
+        season = request.form.get('temporada')
+    
+    print('TEMPORADA DE LA SERIE: ', int(season))
+    
+    return render_template('content-detail.html', contenidos=info, season=season - 1)  # Página de "Busqueda"
+
+@app.route('/search_result/', methods=['GET', 'POST'])
+def search_result():
+    if request.method == 'POST':
+        # Obtén el término de búsqueda desde el formulario
+        termino_busqueda = request.form.get('query', '').strip()
+
+        # Aquí podrías realizar una búsqueda en la base de datos o lógica personalizada
+        # Por ahora, simplemente muestra el término buscado
+        resultados = f"Resultados para: {termino_busqueda}"
+        
+        #Pueba ejemplo lista(cambiar por BD)
+        peliculas = peliculas_controller.peliculas_titulo_titulo_get(termino_busqueda)
+        series = series_controller.series_titulo_titulo_get(termino_busqueda)
+        
+        # Renderiza una página con los resultados
+        return render_template('search.html', peliculas=peliculas, series=series)
+        #return render_template('search.html', termino=termino_busqueda, resultados=resultados)
+    
+    # Si es GET, muestra la página inicial de búsqueda
+    return render_template('search.html')
+    if request.method == 'POST':
+        # Obtén el término de búsqueda desde el formulario
+        termino_busqueda = request.form.get('query', '').strip()
+
+        # Aquí podrías realizar una búsqueda en la base de datos o lógica personalizada
+        # Por ahora, simplemente muestra el término buscado
+        resultados = f"Resultados para: {termino_busqueda}"
+        
+        #Pueba ejemplo lista(cambiar por BD)
+        resultados = ["Ejemplo 1", "Ejemplo 2"] if termino_busqueda == "prueba" else []
+        
+        # Renderiza una página con los resultados
+        return render_template('search.html', resultados=resultados)
+        #return render_template('search.html', termino=termino_busqueda, resultados=resultados)
+    
+    # Si es GET, muestra la página inicial de búsqueda
+    return render_template('search.html')
 
 @app.route('/perfil/')
 def perfil():
@@ -215,6 +314,11 @@ def remove_user():
         print("Error al eliminar el usuario:", e)
         return "Error interno del servidor", 500
 
+@app.route('/logout/')
+def logout():
+    session.clear()
+    return redirect(url_for('index'))
+
 
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=True)
