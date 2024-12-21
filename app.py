@@ -91,6 +91,29 @@ def home():
         return redirect(url_for('index'))  # Redirigir al login si no está autenticado
     return render_template('principal.html')
 
+@app.route('/series/')
+def series():
+    data = request.form
+    nombreserie = data.get('query', type=str)
+    if request.method=='GET':
+        series = series_controller.series_titulo_titulo_get("")
+    if request.method=='POST':
+        series = series_controller.series_titulo_titulo_get(nombreserie)
+    return render_template('series.html', series=series)  # Página de series
+
+@app.route('/peliculas/', methods=['GET', 'POST'])
+def peliculas():
+    data = request.form
+    nombrepelicula = data.get('query', type=str)
+    if request.method=='GET':
+        peliculas = peliculas_controller.peliculas_titulo_titulo_get("")
+    if request.method=='POST':
+        peliculas = peliculas_controller.peliculas_titulo_titulo_get(nombrepelicula)
+    return render_template('peliculas.html', peliculas=peliculas)  # Página de películas
+
+@app.route('/search/')
+def search():
+    return render_template('search.html')  # Página de "Busqueda"
 
 @app.route('/perfil/')
 def perfil():
