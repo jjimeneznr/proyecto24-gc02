@@ -16,6 +16,44 @@ app.secret_key = 'SECRETA'
 app.config['SESSION_TYPE'] = 'filesystem' 
 
 
+@app.route('/')
+def index():
+    return render_template('login.html')
+
+@app.route('/', methods=['GET', 'POST'])
+def login():
+    # Obtener datos del formulario
+    email = request.form.get('email')
+    password = request.form.get('password')
+
+    # Validar las credenciales usando la base de datos
+    id_usuario = dbconnection_usuarios.dbLogIn(email, password)  # Función personalizada que valida en la BD
+    if id_usuario is None :
+        return render_template('login.html', error_message="Usuario no Existente")
+    usuario = usuarios_controller.usuarios_id_get(id_usuario)
+    if usuario is None :
+        return render_template('login.html', error_message="Usuario no Existente")
+    
+    try:
+        session['id'] = usuario.get('id')
+        session['nombre'] = usuario.get('nombre')
+        session['apellidos'] = usuario.get('apellidos')
+        session['email'] = usuario.get('correo')
+        session['password'] = usuario.get('contrasea')
+        session['imagen_perfil'] = usuario.get('imagen_perfil')
+        session['metodo_pago'] = usuario.get('metodo_pago')
+        session['idioma'] = usuario.get('idioma')
+        session['genero_favorito'] = usuario.get('genero_favorito')
+
+        # Redirigir al home tras un login exitoso
+        return redirect(url_for('home'))
+    except KeyError as e:
+        print(f"Error al establecer la sesión: clave faltante en 'usuario': {e}")
+        return render_template('login.html', error_message="Error interno al iniciar sesión. Inténtalo más tarde.")
+    except Exception as e:
+        print(f"Error inesperado: {e}")
+        return render_template('login.html', error_message="Error interno al iniciar sesión. Inténtalo más tarde.")
+    
 @app.route('/registro_post/', methods=['POST'])
 def registro_post():
     nombre = request.form.get('nombre')
