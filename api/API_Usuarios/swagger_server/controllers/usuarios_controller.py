@@ -1,6 +1,7 @@
 import connexion
 import six
 
+
 from ..models.id_contrasea_body import IdContraseaBody  # noqa: E501
 from ..models.id_correo_body import IdCorreoBody  # noqa: E501
 from ..models.id_generofavorito_body import IdGenerofavoritoBody  # noqa: E501
@@ -29,9 +30,19 @@ def usuarios_id_contrasea_put(body, id):  # noqa: E501
 
     :rtype: None
     """
-    if connexion.request.is_json:
-        body = IdContraseaBody.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+   
+    new_passwd = body.get('contrasea')
+
+    if new_passwd:
+        try:
+            if db.dbModifyPassword(id, new_passwd):
+                return {"mensaje": "Contraseña actualizada correctamente"}, 200
+            else:
+                return {"error": "No se pudo actualizar la contraseña"}, 400
+        except Exception as e:
+            return {"error": f"Error al actualizar contraseña: {str(e)}"}, 500
+    else:
+        return {"error": "Solicitud inválida"}, 400
 
 
 def usuarios_id_correo_put(body, id):  # noqa: E501
@@ -46,10 +57,19 @@ def usuarios_id_correo_put(body, id):  # noqa: E501
 
     :rtype: None
     """
-    if connexion.request.is_json:
-        body = IdCorreoBody.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+    
+    new_email = body.get('correo')
 
+    if new_email:
+        try:
+            if db.dbModifylEmail(id, new_email):
+                return {"mensaje": "Correo actualizado correctamente"}, 200
+            else:
+                return {"error": "No se pudo actualizar el correo"}, 400
+        except Exception as e:
+            return {"error": f"Error al actualizar correo: {str(e)}"}, 500
+    else:
+        return {"error": "Solicitud inválida"}, 400
 
 def usuarios_id_delete(id, contrasea):  # noqa: E501
     """Eliminar un usuario
@@ -78,9 +98,18 @@ def usuarios_id_genero_favorito_put(body, id):  # noqa: E501
 
     :rtype: None
     """
-    if connexion.request.is_json:
-        body = IdGenerofavoritoBody.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+    new_genero = body.get('genero_favorito')
+
+    if new_genero:
+        try:
+            if db.dbModifyFavGenre(id,new_genero):
+                return {"mensaje": "Contraseña actualizada correctamente"}, 200
+            else:
+                return {"error": "No se pudo actualizar la contraseña"}, 400
+        except Exception as e:
+            return {"error": f"Error al actualizar contraseña: {str(e)}"}, 500
+    else:
+        return {"error": "Solicitud inválida"}, 400
 
 
 def usuarios_id_get(id):  # noqa: E501
@@ -93,7 +122,10 @@ def usuarios_id_get(id):  # noqa: E501
 
     :rtype: Usuario
     """
-    return 'do some magic!'
+
+    info = db.dbGetUser(id) # Supongo que esta función existe en `dbconnection`.
+    usuario = Usuario(info[0], info[2], info[3], info[1], info[4], "user.png", "Paypal", "Español", info[5])
+    return usuario.to_dict()
 
 
 def usuarios_id_put(body, id):  # noqa: E501
@@ -108,9 +140,19 @@ def usuarios_id_put(body, id):  # noqa: E501
 
     :rtype: None
     """
-    if connexion.request.is_json:
-        body = UsuariosIdBody.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+   
+    nombre = body.get('nombre_completo')
+
+    if nombre:
+        try:
+            if db.dbModifyUserName(id, nombre):
+                    return {"mensaje": "Usuario actualizado correctamente"}, 200
+            else:
+                return {"error": "No se pudo actualizar el usuario"}, 400
+        except Exception as e:
+            return {"error": f"Error al actualizar usuario: {str(e)}"}, 500
+    else:
+        return {"error": "Solicitud inválida"}, 400
 
 
 def usuarios_post(body):  # noqa: E501
