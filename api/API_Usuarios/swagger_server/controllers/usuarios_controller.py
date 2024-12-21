@@ -71,6 +71,7 @@ def usuarios_id_correo_put(body, id):  # noqa: E501
     else:
         return {"error": "Solicitud inválida"}, 400
 
+
 def usuarios_id_delete(id, contrasea):  # noqa: E501
     """Eliminar un usuario
 
@@ -83,7 +84,13 @@ def usuarios_id_delete(id, contrasea):  # noqa: E501
 
     :rtype: InlineResponse200
     """
-    return 'do some magic!'
+    info = db.dbGetUser(id)  # Llama a la función para obtener el usuario por ID
+    usuario = Usuario(info[0], info[2], info[3], info[1], info[4], "imagen.jpg", "Paypal", "Español", info[5])
+    if usuario and usuario["contrasea"]==contrasea:  # Verifica la contraseña
+        result = db.dbRemoveUser(id)  # Llama a la función de eliminación en la base de datos
+        if result:
+            return jsonify({"message": "Usuario eliminado exitosamente"}), 200
+    return jsonify({"error": "ID o contraseña incorrectos"}), 404
 
 
 def usuarios_id_genero_favorito_put(body, id):  # noqa: E501

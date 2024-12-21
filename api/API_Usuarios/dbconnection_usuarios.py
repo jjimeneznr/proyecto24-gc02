@@ -49,8 +49,6 @@ def dbSignUp(email=str, firstName=str, secondName=str, password1=str, password2=
         print(error)
         return False
 
-
-
 def dbPrint():
     try:
         cursor = conexion_usuarios.cursor()
@@ -170,6 +168,29 @@ def dbModifyPassword(id, password):
         print("Error: No se ha podido cambiar la contraseña del usuario")
         print(error)
         return False
+
+def dbRemoveUser(id):
+    print("---dbRemoveUser---")
+    try:
+        cursor = conexion_usuarios.cursor()
+        consulta = "DELETE FROM asee_users WHERE user_id = :id"
+        cursor.execute(consulta, [id])
+        if(cursor.rowcount == 1):
+            print("Usuario eliminado correctamente")
+            respuesta = True
+        else:
+            print("Usuario no existente en la base de datos:",cursor.rowcount)
+            respuesta = False
+        print('------------------------------')
+        cursor.close()
+        conexion_usuarios.commit()
+        return respuesta
+    except db.DatabaseError as error:
+        print("Error. No se ha podido eliminar el usuario")
+        print(error)
+        conexion_usuarios.rollback()
+        return False
+
 
 
 

@@ -223,6 +223,27 @@ def dbModifyPassword(id, password):
         print(error)
         return False
 
+def dbRemoveUser(id):
+    print("---dbRemoveUser---")
+    try:
+        cursor = conexion.cursor()
+        consulta = "DELETE FROM asee_users WHERE user_id = :id"
+        cursor.execute(consulta, [id])
+        if(cursor.rowcount == 1):
+            print("Usuario eliminado correctamente")
+            respuesta = True
+        else:
+            print("Usuario no existente en la base de datos:",cursor.rowcount)
+            respuesta = False
+        print('------------------------------')
+        cursor.close()
+        conexion.commit()
+        return respuesta
+    except db.DatabaseError as error:
+        print("Error. No se ha podido eliminar el usuario")
+        print(error)
+        conexion.rollback()
+        return False
 
 
 conexion = dbConectar()
