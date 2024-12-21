@@ -115,6 +115,67 @@ def peliculas():
 def search():
     return render_template('search.html')  # Página de "Busqueda"
 
+@app.route('/contenido/pelicula/<movie_id>', methods=['GET', 'POST'])
+def search_content_movie(movie_id):
+    print('ID DE LA PELICULA QUE SE VA A MOSTRAR: ', movie_id)
+    if request.method=='GET':
+        info = peliculas_controller.peliculas_id_get(movie_id)
+    if request.method=='POST':
+        info = None
+
+    return render_template('content-detail.html', contenidos=info)  # Página de "Busqueda"
+
+@app.route('/contenido/serie/<serie_id>', methods=['GET', 'POST'])
+def search_content_serie(serie_id):
+    print('ID DE LA SERIE QUE SE VA A MOSTRAR: ', serie_id)
+    info = series_controller.series_id_get(serie_id)
+    if request.method=='GET':
+        season = 2
+    if request.method=='POST':
+        season = request.form.get('temporada')
+    
+    print('TEMPORADA DE LA SERIE: ', int(season))
+    
+    return render_template('content-detail.html', contenidos=info, season=season - 1)  # Página de "Busqueda"
+
+@app.route('/search_result/', methods=['GET', 'POST'])
+def search_result():
+    if request.method == 'POST':
+        # Obtén el término de búsqueda desde el formulario
+        termino_busqueda = request.form.get('query', '').strip()
+
+        # Aquí podrías realizar una búsqueda en la base de datos o lógica personalizada
+        # Por ahora, simplemente muestra el término buscado
+        resultados = f"Resultados para: {termino_busqueda}"
+        
+        #Pueba ejemplo lista(cambiar por BD)
+        peliculas = peliculas_controller.peliculas_titulo_titulo_get(termino_busqueda)
+        series = series_controller.series_titulo_titulo_get(termino_busqueda)
+        
+        # Renderiza una página con los resultados
+        return render_template('search.html', peliculas=peliculas, series=series)
+        #return render_template('search.html', termino=termino_busqueda, resultados=resultados)
+    
+    # Si es GET, muestra la página inicial de búsqueda
+    return render_template('search.html')
+    if request.method == 'POST':
+        # Obtén el término de búsqueda desde el formulario
+        termino_busqueda = request.form.get('query', '').strip()
+
+        # Aquí podrías realizar una búsqueda en la base de datos o lógica personalizada
+        # Por ahora, simplemente muestra el término buscado
+        resultados = f"Resultados para: {termino_busqueda}"
+        
+        #Pueba ejemplo lista(cambiar por BD)
+        resultados = ["Ejemplo 1", "Ejemplo 2"] if termino_busqueda == "prueba" else []
+        
+        # Renderiza una página con los resultados
+        return render_template('search.html', resultados=resultados)
+        #return render_template('search.html', termino=termino_busqueda, resultados=resultados)
+    
+    # Si es GET, muestra la página inicial de búsqueda
+    return render_template('search.html')
+
 @app.route('/perfil/')
 def perfil():
     if 'id' not in session:
