@@ -1,7 +1,11 @@
 import oracledb as db
 
-def dbConectarUsuarios():
-    ip = "localhost"
+
+from api.API_Usuarios.swagger_server.models.usuario import Usuario
+
+
+def dbConectar():
+    ip = "host.docker.internal"
     puerto = 1521
     s_id = "xe"
 
@@ -15,7 +19,6 @@ def dbConectarUsuarios():
     try:
         conexion = db.connect(user=usuario, password=contrasena, host=ip, port=puerto, sid=s_id)
         print("Conexión realizada a la base de datos",conexion)
-        print("---Conexión a la base de datos de Usuarios---")
         return conexion
     except db.DatabaseError as error:
         print("Error en la conexión")
@@ -26,7 +29,7 @@ def dbSignUp(email=str, firstName=str, secondName=str, password1=str, password2=
     print("---dbSignUp---")
     
     try:
-        cursor = conexion_usuarios.cursor()
+        cursor = conexion.cursor()
         print(email)
         print(firstName)
         print(secondName)
@@ -38,7 +41,7 @@ def dbSignUp(email=str, firstName=str, secondName=str, password1=str, password2=
             print("Tupla insertada correctamente")
             print('------------------------------')
             cursor.close()
-            conexion_usuarios.commit()
+            conexion.commit()
             return True
         else:
             print("Error: Las contraseñas no coinciden")
@@ -49,11 +52,43 @@ def dbSignUp(email=str, firstName=str, secondName=str, password1=str, password2=
         print(error)
         return False
 
+def dbLogIn(email=str, password=str):
+    print("---dbLogIn---")
 
+    try:
+        cursor = conexion.cursor()
+        print(email)
+        print(password)
+        consulta = "SELECT user_id,email, passwd FROM asee_users WHERE email = :email AND passwd = :password"
+        cursor.execute(consulta, [email, password])
+        resul = cursor.fetchone()
+        if(cursor.rowcount == 1):
+            print("Usuario encontrado correctamente")
+            if(resul[2] == password):
+                print('Usuario y contraseña correctos')
+            else:
+                print('La contraseña no es correcta')
+                return False
+        else:
+            print("Usuario no existente:",cursor.rowcount)
+            return False
+        print('------------------------------')
+        
+        cursor.close()
+        conexion.commit()
+        if resul[0] is None:
+            return None
+        else:
+            return resul[0]
+       
+    except db.DatabaseError as error:
+        print("Error. No se ha podido iniciar sesión")
+        print(error)
+        return False
 
 def dbPrint():
     try:
-        cursor = conexion_usuarios.cursor()
+        cursor = conexion.cursor()
         consulta = "SELECT * FROM asee_users"
         cursor.execute(consulta)
         for tupla in cursor:
@@ -67,17 +102,21 @@ def dbGetUser(id):
     print("---dbGetUser---")
 
     try:
-        cursor = conexion_usuarios.cursor()
+        cursor = conexion.cursor()
         consulta = "SELECT * FROM asee_users WHERE user_id = :id"
         cursor.execute(consulta, [id])
         tupla = cursor.fetchone()
         print(tupla)
+        imagen = "imagen.jpg"
+        mpago = "Paypal"
+        idioma = "Español"
         
         if tupla is None:
             return None
 
+        usuario = Usuario(tupla[0], tupla[2], tupla[3], tupla[1],tupla[4], imagen, mpago, idioma, tupla[5])
         cursor.close()
-        return tupla
+        return usuario.to_dict()
     except db.DatabaseError as error:
         print("Error: No se puede obtener el usuario")
         print(error)
@@ -85,7 +124,7 @@ def dbGetUser(id):
 def dbModifyUserName(id, nombre,apellidos):
     print("---dbModifyUserName---")
     try:
-        cursor = conexion_usuarios.cursor()
+        cursor = conexion.cursor()
         print(nombre, apellidos)
         consulta = "UPDATE asee_users SET firstname = :nombre, secondname =:apellidos WHERE user_id = :id"
         cursor.execute(consulta, [nombre, apellidos, id])
@@ -98,7 +137,7 @@ def dbModifyUserName(id, nombre,apellidos):
             respuesta = False
         
         cursor.close()
-        conexion_usuarios.commit()
+        conexion.commit()
         return respuesta
     except db.DatabaseError as error:
         print("Error: No se ha podido cambiar el nombre del usuario")
@@ -108,7 +147,7 @@ def dbModifyUserName(id, nombre,apellidos):
 def dbModifyFavGenre(id, genero):
     print("---dbModifyFavGenre---")
     try:
-        cursor = conexion_usuarios.cursor()
+        cursor = conexion.cursor()
         consulta = "UPDATE asee_users SET fav_genre = :genero WHERE user_id = :id"
         cursor.execute(consulta, [genero, id])
         
@@ -120,7 +159,7 @@ def dbModifyFavGenre(id, genero):
             respuesta = False
         
         cursor.close()
-        conexion_usuarios.commit()
+        conexion.commit()
         return respuesta
     except db.DatabaseError as error:
         print("Error: No se ha podido cambiar el genero favorito del usuario")
@@ -130,7 +169,7 @@ def dbModifyFavGenre(id, genero):
 def dbModifylEmail(id, email):
     print("---dbModifylEmail---")
     try:
-        cursor = conexion_usuarios.cursor()
+        cursor = conexion.cursor()
         consulta = "UPDATE asee_users SET email = :email WHERE user_id = :id"
         cursor.execute(consulta, [email, id])
         
@@ -142,7 +181,7 @@ def dbModifylEmail(id, email):
             respuesta = False
         
         cursor.close()
-        conexion_usuarios.commit()
+        conexion.commit()
         return respuesta
     except db.DatabaseError as error:
         print("Error: No se ha podido cambiar el email del usuario")
@@ -152,7 +191,7 @@ def dbModifylEmail(id, email):
 def dbModifyPassword(id, password):
     print("---dbModifyPassword---")
     try:
-        cursor = conexion_usuarios.cursor()
+        cursor = conexion.cursor()
         consulta = "UPDATE asee_users SET passwd = :password WHERE user_id = :id"
         cursor.execute(consulta, [password, id])
         
@@ -164,14 +203,26 @@ def dbModifyPassword(id, password):
             respuesta = False
         
         cursor.close()
-        conexion_usuarios.commit()
+        conexion.commit()
         return respuesta
     except db.DatabaseError as error:
         print("Error: No se ha podido cambiar la contraseña del usuario")
         print(error)
         return False
 
+    try:
+        cursor = conexion.cursor()
+        consulta = "SELECT movie FROM asee_user_movie WHERE user_id = :user_id"
+        cursor.execute(consulta, [user_id,])
+        peliculas = []
+        for tupla in cursor:
+            peliculas.append(tupla)
+        return peliculas
+    except db.DatabaseError as error:
+        print("Error. No se han podido actualizar las visualizaciones de usuario")
+        print(error)
+        return False
 
 
 
-conexion_usuarios = dbConectarUsuarios()
+conexion = dbConectar()
