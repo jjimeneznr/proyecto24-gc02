@@ -5,8 +5,8 @@ from datetime import date, datetime  # noqa: F401
 
 from typing import List, Dict  # noqa: F401
 
-from swagger_server.models.base_model_ import Model
-from swagger_server import util
+from ..models.base_model_ import Model
+from .. import util
 
 
 class VisualizacionesPeliculas(Model):
@@ -14,28 +14,23 @@ class VisualizacionesPeliculas(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id: str=None, pelicula_id: str=None, num_visualizaciones: int=None):  # noqa: E501
+    def __init__(self, pelicula_id: str=None, num_visualizaciones: int=None):  # noqa: E501
         """VisualizacionesPeliculas - a model defined in Swagger
 
-        :param id: The id of this VisualizacionesPeliculas.  # noqa: E501
-        :type id: str
         :param pelicula_id: The pelicula_id of this VisualizacionesPeliculas.  # noqa: E501
         :type pelicula_id: str
         :param num_visualizaciones: The num_visualizaciones of this VisualizacionesPeliculas.  # noqa: E501
         :type num_visualizaciones: int
         """
         self.swagger_types = {
-            'id': str,
             'pelicula_id': str,
             'num_visualizaciones': int
         }
 
         self.attribute_map = {
-            'id': 'id',
             'pelicula_id': 'peliculaId',
             'num_visualizaciones': 'numVisualizaciones'
         }
-        self._id = id
         self._pelicula_id = pelicula_id
         self._num_visualizaciones = num_visualizaciones
 
@@ -49,27 +44,6 @@ class VisualizacionesPeliculas(Model):
         :rtype: VisualizacionesPeliculas
         """
         return util.deserialize_model(dikt, cls)
-
-    @property
-    def id(self) -> str:
-        """Gets the id of this VisualizacionesPeliculas.
-
-
-        :return: The id of this VisualizacionesPeliculas.
-        :rtype: str
-        """
-        return self._id
-
-    @id.setter
-    def id(self, id: str):
-        """Sets the id of this VisualizacionesPeliculas.
-
-
-        :param id: The id of this VisualizacionesPeliculas.
-        :type id: str
-        """
-
-        self._id = id
 
     @property
     def pelicula_id(self) -> str:

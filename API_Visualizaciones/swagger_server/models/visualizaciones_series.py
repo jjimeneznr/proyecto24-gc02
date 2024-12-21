@@ -5,8 +5,8 @@ from datetime import date, datetime  # noqa: F401
 
 from typing import List, Dict  # noqa: F401
 
-from swagger_server.models.base_model_ import Model
-from swagger_server import util
+from ..models.base_model_ import Model
+from .. import util
 
 
 class VisualizacionesSeries(Model):
@@ -14,28 +14,23 @@ class VisualizacionesSeries(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id: str=None, serie_id: str=None, num_visualizaciones: int=None):  # noqa: E501
+    def __init__(self, serie_id: str=None, num_visualizaciones: int=None):  # noqa: E501
         """VisualizacionesSeries - a model defined in Swagger
 
-        :param id: The id of this VisualizacionesSeries.  # noqa: E501
-        :type id: str
         :param serie_id: The serie_id of this VisualizacionesSeries.  # noqa: E501
         :type serie_id: str
         :param num_visualizaciones: The num_visualizaciones of this VisualizacionesSeries.  # noqa: E501
         :type num_visualizaciones: int
         """
         self.swagger_types = {
-            'id': str,
             'serie_id': str,
             'num_visualizaciones': int
         }
 
         self.attribute_map = {
-            'id': 'id',
             'serie_id': 'serieId',
             'num_visualizaciones': 'numVisualizaciones'
         }
-        self._id = id
         self._serie_id = serie_id
         self._num_visualizaciones = num_visualizaciones
 
@@ -49,27 +44,6 @@ class VisualizacionesSeries(Model):
         :rtype: VisualizacionesSeries
         """
         return util.deserialize_model(dikt, cls)
-
-    @property
-    def id(self) -> str:
-        """Gets the id of this VisualizacionesSeries.
-
-
-        :return: The id of this VisualizacionesSeries.
-        :rtype: str
-        """
-        return self._id
-
-    @id.setter
-    def id(self, id: str):
-        """Sets the id of this VisualizacionesSeries.
-
-
-        :param id: The id of this VisualizacionesSeries.
-        :type id: str
-        """
-
-        self._id = id
 
     @property
     def serie_id(self) -> str:

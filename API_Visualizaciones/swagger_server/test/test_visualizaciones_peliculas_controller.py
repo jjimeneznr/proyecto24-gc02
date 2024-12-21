@@ -5,8 +5,8 @@ from __future__ import absolute_import
 from flask import json
 from six import BytesIO
 
-from swagger_server.models.visualizaciones_peliculas import VisualizacionesPeliculas  # noqa: E501
-from swagger_server.test import BaseTestCase
+from ..models.visualizaciones_peliculas import VisualizacionesPeliculas  # noqa: E501
+from ..test import BaseTestCase
 
 
 class TestVisualizacionesPeliculasController(BaseTestCase):
