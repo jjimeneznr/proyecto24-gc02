@@ -5,8 +5,8 @@ from datetime import date, datetime  # noqa: F401
 
 from typing import List, Dict  # noqa: F401
 
-from swagger_server.models.base_model_ import Model
-from swagger_server import util
+from ..models.base_model_ import Model
+from .. import util
 
 
 class UsuariosBody(Model):
@@ -14,13 +14,11 @@ class UsuariosBody(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, nombre: str=None, apellidos: str=None, correo: str=None, contrasea: str=None, imagen_perfil: str=None, metodo_pago: str=None, idioma: str=None, genero_favorito: str=None):  # noqa: E501
+    def __init__(self, nombre_completo: str=None, correo: str=None, contrasea: str=None, imagen_perfil: str=None, metodo_pago: str=None, idioma: str=None, genero_favorito: str=None):  # noqa: E501
         """UsuariosBody - a model defined in Swagger
 
-        :param nombre: The nombre of this UsuariosBody.  # noqa: E501
-        :type nombre: str
-        :param apellidos: The apellidos of this UsuariosBody.  # noqa: E501
-        :type apellidos: str
+        :param nombre_completo: The nombre_completo of this UsuariosBody.  # noqa: E501
+        :type nombre_completo: str
         :param correo: The correo of this UsuariosBody.  # noqa: E501
         :type correo: str
         :param contrasea: The contrasea of this UsuariosBody.  # noqa: E501
@@ -35,8 +33,7 @@ class UsuariosBody(Model):
         :type genero_favorito: str
         """
         self.swagger_types = {
-            'nombre': str,
-            'apellidos': str,
+            'nombre_completo': str,
             'correo': str,
             'contrasea': str,
             'imagen_perfil': str,
@@ -46,8 +43,7 @@ class UsuariosBody(Model):
         }
 
         self.attribute_map = {
-            'nombre': 'nombre',
-            'apellidos': 'apellidos',
+            'nombre_completo': 'nombre_completo',
             'correo': 'correo',
             'contrasea': 'contraseña',
             'imagen_perfil': 'imagen_perfil',
@@ -55,8 +51,7 @@ class UsuariosBody(Model):
             'idioma': 'idioma',
             'genero_favorito': 'genero_favorito'
         }
-        self._nombre = nombre
-        self._apellidos = apellidos
+        self._nombre_completo = nombre_completo
         self._correo = correo
         self._contrasea = contrasea
         self._imagen_perfil = imagen_perfil
@@ -76,54 +71,29 @@ class UsuariosBody(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def nombre(self) -> str:
-        """Gets the nombre of this UsuariosBody.
+    def nombre_completo(self) -> str:
+        """Gets the nombre_completo of this UsuariosBody.
 
         Nombre completo del usuario  # noqa: E501
 
-        :return: The nombre of this UsuariosBody.
+        :return: The nombre_completo of this UsuariosBody.
         :rtype: str
         """
-        return self._nombre
+        return self._nombre_completo
 
-    @nombre.setter
-    def nombre(self, nombre: str):
-        """Sets the nombre of this UsuariosBody.
+    @nombre_completo.setter
+    def nombre_completo(self, nombre_completo: str):
+        """Sets the nombre_completo of this UsuariosBody.
 
         Nombre completo del usuario  # noqa: E501
 
-        :param nombre: The nombre of this UsuariosBody.
-        :type nombre: str
+        :param nombre_completo: The nombre_completo of this UsuariosBody.
+        :type nombre_completo: str
         """
-        if nombre is None:
-            raise ValueError("Invalid value for `nombre`, must not be `None`")  # noqa: E501
+        if nombre_completo is None:
+            raise ValueError("Invalid value for `nombre_completo`, must not be `None`")  # noqa: E501
 
-        self._nombre = nombre
-
-    @property
-    def apellidos(self) -> str:
-        """Gets the apellidos of this UsuariosBody.
-
-        Apellidos del Usuario  # noqa: E501
-
-        :return: The apellidos of this UsuariosBody.
-        :rtype: str
-        """
-        return self._apellidos
-
-    @apellidos.setter
-    def apellidos(self, apellidos: str):
-        """Sets the apellidos of this UsuariosBody.
-
-        Apellidos del Usuario  # noqa: E501
-
-        :param apellidos: The apellidos of this UsuariosBody.
-        :type apellidos: str
-        """
-        if apellidos is None:
-            raise ValueError("Invalid value for `apellidos`, must not be `None`")  # noqa: E501
-
-        self._apellidos = apellidos
+        self._nombre_completo = nombre_completo
 
     @property
     def correo(self) -> str:

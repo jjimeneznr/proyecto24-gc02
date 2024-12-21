@@ -4,18 +4,23 @@ from flask import redirect, url_for
 from flask import request, session,jsonify
 import requests
 
-from api.API_Contenidos.swagger_server.controllers import peliculas_controller, series_controller
-from api.API_Usuarios.swagger_server.controllers import usuarios_controller
+from API_Contenidos.swagger_server import contenidos_blueprint
+from API_Contenidos.swagger_server.controllers import peliculas_controller, series_controller
+from API_Usuario.swagger_server.controllers import usuarios_controller
+from API_Visualizaciones.swagger_server import visualizaciones_blueprint
 
-
-
-from api.API_Usuarios import dbconnection_usuarios
+from API_Contenidos import dbconnection_contenidos
+from API_Usuario import dbconnection_usuarios
+from API_Visualizaciones import dbconnection_visualizaciones
 
 app = Flask(__name__)
 app.secret_key = 'SECRETA'
 app.config['SESSION_TYPE'] = 'filesystem' 
 
-
+# Registrar cada API con un prefijo de URL
+app.register_blueprint(contenidos_blueprint, url_prefix='/api/contenidos')
+app.register_blueprint(visualizaciones_blueprint, url_prefix='/api/visualizaciones')
+ 
 @app.route('/')
 def index():
     return render_template('login.html')
@@ -110,6 +115,16 @@ def peliculas():
     if request.method=='POST':
         peliculas = peliculas_controller.peliculas_titulo_titulo_get(nombrepelicula)
     return render_template('peliculas.html', peliculas=peliculas)  # Página de películas
+
+@app.route('/mi_lista/')
+def mi_lista():
+    peliculas_id = dbconnection_visualizaciones.dbGetMovieHistory(1)
+    peliculas = []
+    for x in peliculas_id:
+        print(x)
+        peliculas.append(peliculas_controller.peliculas_id_get(x[0]))
+
+    return render_template('miLista.html', peliculas=peliculas)  # Página de "Mi lista"
 
 @app.route('/search/')
 def search():
@@ -304,5 +319,6 @@ def logout():
     session.clear()
     return redirect(url_for('index'))
 
+
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=True)
