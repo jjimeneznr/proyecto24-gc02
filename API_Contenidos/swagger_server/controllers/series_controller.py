@@ -61,19 +61,6 @@ def series_id_actores_get(id):  # noqa: E501
     return actors
 
 
-def series_id_directores_get(id):  # noqa: E501
-    """Obtener los directores de una serie específica
-
-     # noqa: E501
-
-    :param id: ID de la serie
-    :type id: str
-
-    :rtype: List[Director]
-    """
-    return 'No hay directores para las series'
-
-
 def series_id_get(id):  # noqa: E501
     """Obtener una serie por ID
 
