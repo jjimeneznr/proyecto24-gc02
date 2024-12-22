@@ -20,10 +20,12 @@ app.config['SESSION_TYPE'] = 'filesystem'
 # Registrar cada API con un prefijo de URL
 app.register_blueprint(contenidos_blueprint, url_prefix='/api/contenidos')
 app.register_blueprint(visualizaciones_blueprint, url_prefix='/api/visualizaciones')
+
+login_html = 'login.html'
  
 @app.route('/')
 def index():
-    return render_template('login.html')
+    return render_template(login_html)
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
@@ -34,10 +36,10 @@ def login():
     # Validar las credenciales usando la base de datos
     id_usuario = dbconnection_usuarios.dbLogIn(email, password)  # Función personalizada que valida en la BD
     if id_usuario is None :
-        return render_template('login.html', error_message="Usuario no Existente")
+        return render_template(login_html, error_message="Usuario no Existente")
     usuario = usuarios_controller.usuarios_id_get(id_usuario)
     if usuario is None :
-        return render_template('login.html', error_message="Usuario no Existente")
+        return render_template(login_html, error_message="Usuario no Existente")
     
     try:
         session['id'] = usuario.get('id')
@@ -54,10 +56,10 @@ def login():
         return redirect(url_for('home'))
     except KeyError as e:
         print(f"Error al establecer la sesión: clave faltante en 'usuario': {e}")
-        return render_template('login.html', error_message="Error interno al iniciar sesión. Inténtalo más tarde.")
+        return render_template(login_html, error_message="Error interno al iniciar sesión. Inténtalo más tarde.")
     except Exception as e:
         print(f"Error inesperado: {e}")
-        return render_template('login.html', error_message="Error interno al iniciar sesión. Inténtalo más tarde.")
+        return render_template(login_html, error_message="Error interno al iniciar sesión. Inténtalo más tarde.")
     
 @app.route('/registro_post/', methods=['POST'])
 def registro_post():
