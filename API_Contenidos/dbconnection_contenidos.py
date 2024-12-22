@@ -31,7 +31,6 @@ def dbGetActors():
         for tupla in cursor:
             print(tupla)
             actors.append(tupla)
-        print("Total actores:", cursor.rowcount)
         cursor.close()
         return actors
     except db.DatabaseError as error:
@@ -294,7 +293,6 @@ def dbGetActorsInMovie(movie_id):
             print(tupla)
             actores.append(tupla)
 
-        print("Total actores:", cursor.rowcount)
         cursor.close()
         return actores
     except db.DatabaseError as error:
@@ -313,7 +311,6 @@ def dbGetActorsInSerie(serie_id):
             print(tupla)
             actores.append(tupla)
 
-        print("Total actores:", cursor.rowcount)
         cursor.close()
         return actores
     except db.DatabaseError as error:
